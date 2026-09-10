@@ -7,11 +7,15 @@ out/
 build/
 dist/
 
-# Database (local dev sqlite) — keep dev.db out of git, keep schema + migrations
+# Database (local node:sqlite) — data files stay out of git
 *.db
+*.db-shm
+*.db-wal
 *.db-journal
-prisma/migrations/**/migration_lock.toml
-!prisma/migrations/migration_lock.toml
+
+# TypeScript build info
+tsconfig.tsbuildinfo
+*.tsbuildinfo
 
 # Uploads (user content)
 /public/uploads/*
