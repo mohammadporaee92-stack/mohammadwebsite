@@ -2,7 +2,10 @@
   "name": "mohammadwebsite",
   "private": true,
   "version": "1.0.0",
-  "description": "PorAI — Practical AI for Work, Engineering and Life by Mohammad Poraee. Bilingual (FA/EN) personal brand + AI education platform.",
+  "engines": {
+    "node": ">=22"
+  },
+  "description": "PorAI — Practical AI for Work, Engineering and Life by Mohammad Pouraei. Bilingual (FA/EN) personal brand + AI education platform.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
