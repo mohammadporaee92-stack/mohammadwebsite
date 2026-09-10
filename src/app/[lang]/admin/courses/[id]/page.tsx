@@ -71,7 +71,7 @@ export default async function AdminCourseEdit({ params }: { params: Promise<{ la
               <option value="">—</option>
               {cats.map((c) => <option key={c.id} value={c.id}>{c.nameEn}</option>)}
             </select></div>
-          <div><label className="block text-xs font-extrabold mb-1">Instructor</label><input name="instructor" defaultValue={course?.instructor || "Mohammad Poraee"} className={inputCls} /></div>
+          <div><label className="block text-xs font-extrabold mb-1">Instructor</label><input name="instructor" defaultValue={course?.instructor || "Mohammad Pouraei"} className={inputCls} /></div>
         </div>
         <div className="md:col-span-2 grid md:grid-cols-2 gap-4">
           <UploadField name="coverUrl" label="Cover image" initial={course?.coverUrl || ""} />

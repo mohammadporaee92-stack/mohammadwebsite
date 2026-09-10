@@ -64,7 +64,7 @@ export async function saveArticle(formData: FormData) {
     metaTitleEn: str(formData, "metaTitleEn") || null,
     metaDescFa: str(formData, "metaDescFa") || null,
     metaDescEn: str(formData, "metaDescEn") || null,
-    authorName: str(formData, "authorName") || "Mohammad Poraee",
+    authorName: str(formData, "authorName") || "Mohammad Pouraei",
   };
   let articleId = id;
   if (isNew) {
@@ -119,7 +119,7 @@ export async function saveCourse(formData: FormData) {
     status: str(formData, "status") || "draft",
     featured: formData.get("featured") === "on",
     categoryId: str(formData, "categoryId") || null,
-    instructor: str(formData, "instructor") || "Mohammad Poraee",
+    instructor: str(formData, "instructor") || "Mohammad Pouraei",
   };
   let courseId = id;
   if (isNew) {

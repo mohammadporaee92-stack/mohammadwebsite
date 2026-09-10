@@ -120,7 +120,7 @@ model Article {
   metaDescEn  String?
 
   views      Int      @default(0)
-  authorName String   @default("Mohammad Poraee")
+  authorName String   @default("Mohammad Pouraei")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -154,7 +154,7 @@ model Course {
   featured    Boolean @default(false)
   categoryId  String?
   category    Category? @relation(fields: [categoryId], references: [id])
-  instructor  String  @default("Mohammad Poraee")
+  instructor  String  @default("Mohammad Pouraei")
 
   modules     Module[]
   enrollments Enrollment[]

@@ -1,4 +1,4 @@
-# PorAI — محمد پرایی | Mohammad Poraee
+# PorAI — محمد پورائی | Mohammad Pouraei
 
 > **هوش مصنوعی کاربردی برای کار، مهندسی و زندگی**
 > Practical AI for Work, Engineering and Life

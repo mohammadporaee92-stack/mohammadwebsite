@@ -6,23 +6,23 @@ import { Settings, Cats, Tags, Articles, Courses, Tools, Projects, Journey, run 
 async function main() {
   // ---------- Settings ----------
   const settings: Record<string, string> = {
-    site_name_fa: "پورای‌آی | محمد پرایی",
-    site_name_en: "PorAI | Mohammad Poraee",
+    site_name_fa: "پورای‌آی | محمد پورائی",
+    site_name_en: "PorAI | Mohammad Pouraei",
     tagline_fa: "هوش مصنوعی کاربردی برای کار، مهندسی و زندگی",
     tagline_en: "Practical AI for Work, Engineering and Life",
     bio_fa:
-      "محمد پرایی هستم؛ فارغ‌التحصیل کارشناسی ارشد مهندسی برق از دانشگاه خواجه نصیرالدین طوسی و مهندس شاغل در صنعت نفت و گاز. چند سال است که هوش مصنوعی را نه فقط به‌عنوان یک علاقه، بلکه به‌عنوان ابزار واقعی کار یاد می‌گیرم، تست می‌کنم و می‌سازم. ماموریت من ساده است: کمک به مهندسان، مدیران و حرفه‌ای‌ها تا از AI در دنیای واقعی استفاده کنند.",
+      "محمد پورائی هستم؛ فارغ‌التحصیل کارشناسی ارشد مهندسی برق از دانشگاه خواجه نصیرالدین طوسی و مهندس شاغل در صنعت نفت و گاز. چند سال است که هوش مصنوعی را نه فقط به‌عنوان یک علاقه، بلکه به‌عنوان ابزار واقعی کار یاد می‌گیرم، تست می‌کنم و می‌سازم. ماموریت من ساده است: کمک به مهندسان، مدیران و حرفه‌ای‌ها تا از AI در دنیای واقعی استفاده کنند.",
     bio_en:
-      "I'm Mohammad Poraee — MSc in Electrical Engineering (K. N. Toosi University of Technology) and an engineer in the Oil & Gas industry. For years I've been learning, testing and building with AI as a real work tool, not just a hobby. My mission is simple: help engineers, managers and professionals actually use AI in the real world.",
-    profile_image: "",
+      "I'm Mohammad Pouraei — MSc in Electrical Engineering (K. N. Toosi University of Technology) and an engineer in the Oil & Gas industry. For years I've been learning, testing and building with AI as a real work tool, not just a hobby. My mission is simple: help engineers, managers and professionals actually use AI in the real world.",
+    profile_image: "/images/profile.jpg",
     instagram: "mohammad_por_ai",
     linkedin: "",
     youtube: "",
-    telegram: "",
-    contact_email: "hello@mohammadporaee.com",
+    telegram: "https://t.me/mohammad_por_ai",
+    contact_email: "hello@mohammadpouraei.com",
     default_lang: "fa",
-    seo_title_fa: "محمد پرایی | آموزش کاربردی هوش مصنوعی برای مهندسی و کسب‌وکار",
-    seo_title_en: "Mohammad Poraee | Practical AI for Engineering and Business",
+    seo_title_fa: "محمد پورائی | آموزش کاربردی هوش مصنوعی برای مهندسی و کسب‌وکار",
+    seo_title_en: "Mohammad Pouraei | Practical AI for Engineering and Business",
     seo_desc_fa:
       "آموزش عملی هوش مصنوعی: ChatGPT، پرامپت‌نویسی، اتوماسیون، ایجنت‌های AI و کاربرد AI در مهندسی برق و نفت و گاز.",
     seo_desc_en:
@@ -218,7 +218,7 @@ async function main() {
       audienceEn: "Electrical, mechanical, industrial engineers\nOil & gas professionals\nTechnical managers",
       prereqFa: "آشنایی اولیه با ChatGPT کافی است.",
       prereqEn: "Basic familiarity with ChatGPT is enough.",
-      priceType: "paid", priceIrt: 2900000, priceUsd: 49, level: "intermediate", lang: "both", status: "published", featured: true, categoryId: proId,
+      priceType: "free", level: "intermediate", lang: "both", status: "published", featured: true, categoryId: proId,
       modules: [
         { titleFa: "AI در کار مهندسی", titleEn: "AI in Engineering Work", lessons: [
           { titleFa: "نقشه راه AI برای مهندس", titleEn: "AI roadmap for engineers", bodyFa: "کجای کار مهندسی AI بیشترین ارزش را دارد و از کجا شروع کنیم.", bodyEn: "Where AI adds most value in engineering and where to start.", durationMin: 18, isFree: true },

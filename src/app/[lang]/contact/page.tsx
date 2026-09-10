@@ -47,7 +47,7 @@ export default async function ContactPage({ params }: { params: Promise<{ lang: 
             <div className="relative flex items-center gap-4">
               <ProfilePhoto lang={lang} size="sm" />
               <div>
-                <p className="font-extrabold text-lg">{lang === "fa" ? "محمد پرایی" : "Mohammad Poraee"}</p>
+                <p className="font-extrabold text-lg">{lang === "fa" ? "محمد پورائی" : "Mohammad Pouraei"}</p>
                 <p className="text-sm text-slate-300">{d.brandTagline}</p>
               </div>
             </div>

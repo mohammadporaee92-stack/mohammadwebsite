@@ -64,7 +64,7 @@ export default async function CoursePage({ params }: { params: Promise<{ lang: s
         "@type": "Course",
         name: pick(course, "title", lang),
         description: pick(course, "desc", lang),
-        provider: { "@type": "Person", name: "Mohammad Poraee", url: absoluteUrl(`/${lang}/about`) },
+        provider: { "@type": "Person", name: "Mohammad Pouraei", url: absoluteUrl(`/${lang}/about`) },
         inLanguage: lang === "fa" ? "fa" : "en",
         hasCourseInstance: { "@type": "CourseInstance", courseMode: "online" },
       }} />

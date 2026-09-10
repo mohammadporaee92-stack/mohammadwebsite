@@ -16,7 +16,7 @@ export default function Logo({ lang, dark = false }: { lang: Lang; dark?: boolea
           Por<span className="text-transparent bg-clip-text bg-gradient-to-r from-tech-500 to-sky-glow">AI</span>
         </span>
         <span className={cx("block text-[10px] font-medium tracking-wide", dark ? "text-slate-300" : "text-slate-500")}>
-          {lang === "fa" ? "محمد پرایی" : "Mohammad Poraee"}
+          {lang === "fa" ? "محمد پورائی" : "Mohammad Pouraei"}
         </span>
       </span>
     </Link>

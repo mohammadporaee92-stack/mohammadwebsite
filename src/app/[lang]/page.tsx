@@ -40,8 +40,8 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
   const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: "Mohammad Poraee",
-    alternateName: "محمد پرایی",
+    name: "Mohammad Pouraei",
+    alternateName: "محمد پورائی",
     jobTitle: lang === "fa" ? "مهندس برق و مدرس هوش مصنوعی" : "Electrical Engineer & AI Educator",
     alumniOf: { "@type": "CollegeOrUniversity", name: "K. N. Toosi University of Technology" },
     url: absoluteUrl(`/${lang}/about`),
@@ -64,7 +64,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
               {d.hero.badge} · PorAI
             </p>
             <p className="mt-5 text-lg font-bold text-sky-glow">
-              {lang === "fa" ? "محمد پرایی" : "Mohammad Poraee"}
+              {lang === "fa" ? "محمد پورائی" : "Mohammad Pouraei"}
             </p>
             <h1 className="mt-2 text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.25]">
               {d.hero.titleA}{" "}

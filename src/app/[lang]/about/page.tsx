@@ -42,8 +42,8 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
       <JsonLd data={{
         "@context": "https://schema.org",
         "@type": "Person",
-        name: "Mohammad Poraee",
-        alternateName: "محمد پرایی",
+        name: "Mohammad Pouraei",
+        alternateName: "محمد پورائی",
         url: absoluteUrl(`/${lang}/about`),
         jobTitle: "Electrical Engineer & AI Educator",
         alumniOf: { "@type": "CollegeOrUniversity", name: "K. N. Toosi University of Technology" },
@@ -59,7 +59,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
           <div>
             <p className="text-sm font-extrabold text-tech-600 tracking-wide">PorAI · {d.brandTagline}</p>
             <h1 className="mt-2 text-3xl sm:text-4xl font-extrabold text-navy-900">
-              {lang === "fa" ? "محمد پرایی" : "Mohammad Poraee"}
+              {lang === "fa" ? "محمد پورائی" : "Mohammad Pouraei"}
             </h1>
             <p className="mt-4 text-slate-600 leading-8 whitespace-pre-line">{lang === "fa" ? s.bio_fa : s.bio_en}</p>
             <p className="mt-4 inline-flex text-sm font-extrabold text-navy-900 bg-blue-50 border border-blue-100 rounded-full px-4 py-2">

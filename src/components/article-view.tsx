@@ -31,7 +31,7 @@ export default function ArticleDetail({ lang, article, bookmarked, base }: {
     "@type": "Article",
     headline: title,
     description: pick(article, "excerpt", lang),
-    author: { "@type": "Person", name: "Mohammad Poraee", url: absoluteUrl(`/${lang}/about`) },
+    author: { "@type": "Person", name: "Mohammad Pouraei", url: absoluteUrl(`/${lang}/about`) },
     datePublished: article.createdAt,
     dateModified: article.updatedAt,
     mainEntityOfPage: url,
