@@ -40,7 +40,6 @@ export default async function CoursePage({ params }: { params: Promise<{ lang: s
   const user = await getCurrentUser();
   const modules = Courses.modules(course.id).map((m) => ({ ...m, lessons: Courses.lessonsByModule(m.id) }));
   const allLessons = modules.flatMap((m) => m.lessons);
-  const minutes = allLessons.reduce((s, l) => s + l.durationMin, 0);
   const enrolled = user ? !!Enroll.get(user.id, course.id) : false;
   const doneIds = user && enrolled ? Progress.doneIdsForCourse(user.id, course.id) : new Set<string>();
   const progress = allLessons.length ? Math.round((doneIds.size / allLessons.length) * 100) : 0;
@@ -86,7 +85,6 @@ export default async function CoursePage({ params }: { params: Promise<{ lang: s
               <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20">{levelLabel}</span>
               <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20">📝 {d.courses.textBased}</span>
               <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20">{fmtNum(allLessons.length, lang)} {d.home.lessons}</span>
-              <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20">{fmtNum(minutes, lang)} {d.home.min}</span>
             </div>
             <h1 className="mt-4 text-3xl sm:text-4xl font-extrabold leading-[1.5]">{pick(course, "title", lang)}</h1>
             <p className="mt-3 text-slate-200 leading-8">{pick(course, "desc", lang)}</p>
@@ -135,7 +133,7 @@ export default async function CoursePage({ params }: { params: Promise<{ lang: s
             </div>
             <ul className="mt-5 space-y-2 text-sm text-slate-600">
               <li>✓ {fmtNum(allLessons.length, lang)} {d.home.lessons}</li>
-              <li>✓ {fmtNum(minutes, lang)} {d.home.min} {lang === "fa" ? "آموزش" : "of training"}</li>
+              <li>✓ 📝 {d.courses.textBased}</li>
               <li>✓ {lang === "fa" ? "دسترسی مادام‌العمر" : "Lifetime access"}</li>
             </ul>
           </aside>
@@ -184,7 +182,6 @@ export default async function CoursePage({ params }: { params: Promise<{ lang: s
                               {pick(l, "title", lang)}
                               {l.isFree && <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">{d.courses.freeLesson}</span>}
                             </span>
-                            <span className="text-xs text-slate-400 shrink-0">{fmtNum(l.durationMin, lang)} {d.home.min}</span>
                           </Link>
                         </li>
                       );

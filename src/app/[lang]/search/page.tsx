@@ -67,7 +67,7 @@ export default async function SearchPage({ params, searchParams }: {
           <h2 className="text-xl font-extrabold text-navy-900 mb-4">{d.search.courses}</h2>
           <div className="grid md:grid-cols-3 gap-5">
             {courses.map((c) => (
-              <CourseCard key={c.slug} lang={lang} course={c} lessonCount={c.lessonCount} minutes={c.minutes} />
+              <CourseCard key={c.slug} lang={lang} course={c} lessonCount={c.lessonCount} />
             ))}
           </div>
         </section>

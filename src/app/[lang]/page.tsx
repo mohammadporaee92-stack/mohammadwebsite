@@ -129,7 +129,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
           <SectionHeading title={d.home.featuredCourses} sub={d.home.featuredCoursesSub} />
           <div className="grid md:grid-cols-3 gap-5">
             {courses.map((c) => (
-              <CourseCard key={c.slug} lang={lang} course={c} lessonCount={c.lessonCount} minutes={c.minutes} />
+              <CourseCard key={c.slug} lang={lang} course={c} lessonCount={c.lessonCount} />
             ))}
           </div>
         </section>

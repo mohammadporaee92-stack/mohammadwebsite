@@ -25,7 +25,7 @@ export default async function DashboardCourses({ params }: { params: Promise<{ l
       {enrollments.length > 0 ? (
         <div className="grid sm:grid-cols-2 gap-4">
           {enrollments.map((e) => (
-            <CourseCard key={e.course.slug} lang={lang} course={e.course} lessonCount={e.lessonCount} minutes={e.minutes} progress={e.progress} />
+            <CourseCard key={e.course.slug} lang={lang} course={e.course} lessonCount={e.lessonCount} progress={e.progress} />
           ))}
         </div>
       ) : (

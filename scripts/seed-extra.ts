@@ -69,9 +69,10 @@ const posts = [
 async function main() {
   const catId = (slug: string) => Cats.bySlug(slug)!.id;
   for (const p of posts) {
+    const { category: xc, ...xrest } = p;
     Articles.upsertBySlug(p.slug, {
-      ...p,
-      categoryId: catId(p.category),
+      ...xrest,
+      categoryId: catId(xc),
       authorName: "Mohammad Pouraei",
       views: 60 + p.slug.length * 17,
     } as never);

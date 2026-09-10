@@ -30,7 +30,7 @@ export default async function CoursesIndex({ params }: { params: Promise<{ lang:
       {courses.length > 0 ? (
         <div className="grid md:grid-cols-3 gap-5">
           {courses.map((c) => (
-            <CourseCard key={c.slug} lang={lang} course={c} lessonCount={c.lessonCount} minutes={c.minutes} />
+            <CourseCard key={c.slug} lang={lang} course={c} lessonCount={c.lessonCount} />
           ))}
         </div>
       ) : (

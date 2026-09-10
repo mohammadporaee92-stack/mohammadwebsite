@@ -81,7 +81,7 @@ export type CourseCardData = {
   level: string; _count?: { modules: number };
 };
 
-export function CourseCard({ lang, course, lessonCount, minutes, progress }: { lang: Lang; course: CourseCardData; lessonCount?: number; minutes?: number; progress?: number }) {
+export function CourseCard({ lang, course, lessonCount, progress }: { lang: Lang; course: CourseCardData; lessonCount?: number; progress?: number }) {
   const d = getDict(lang);
   return (
     <article className="group flex flex-col bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
@@ -107,10 +107,7 @@ export function CourseCard({ lang, course, lessonCount, minutes, progress }: { l
         </Link>
         <p className="mt-2 text-sm text-slate-500 leading-6 line-clamp-2">{pick(course, "desc", lang)}</p>
         <div className="mt-3 flex items-center gap-3 text-xs text-slate-500">
-          <span className="inline-flex items-center gap-1">
-            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" strokeLinecap="round" /></svg>
-            {fmtNum(minutes ?? 0, lang)} {d.home.min}
-          </span>
+          <span className="inline-flex items-center gap-1">📝 {d.courses.textBased}</span>
           <span>•</span>
           <span>{fmtNum(lessonCount ?? 0, lang)} {d.home.lessons}</span>
           <span>•</span>

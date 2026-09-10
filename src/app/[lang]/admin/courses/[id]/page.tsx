@@ -130,7 +130,7 @@ export default async function AdminCourseEdit({ params }: { params: Promise<{ la
                     <li key={l.id} className="rounded-xl bg-slate-50 border border-slate-100">
                       <details>
                         <summary className="flex items-center gap-2 px-3 py-2.5 text-sm font-bold cursor-pointer list-none">
-                          <span className="flex-1 truncate">{pick(l, "title", lang)} <span className="text-[11px] text-slate-400 font-mono">· {l.durationMin}m {l.isFree ? "· FREE" : ""}</span></span>
+                          <span className="flex-1 truncate">{pick(l, "title", lang)} <span className="text-[11px] text-slate-400 font-mono">{l.isFree ? "· FREE" : ""}</span></span>
                           <span className="text-tech-600 text-xs">Edit ▾</span>
                         </summary>
                         <div className="px-3 pb-3 space-y-2">
@@ -144,8 +144,6 @@ export default async function AdminCourseEdit({ params }: { params: Promise<{ la
                             <textarea name="bodyFa" rows={4} defaultValue={l.bodyFa} placeholder="Body FA" className={`${inputCls} font-mono`} />
                             <textarea name="bodyEn" rows={4} defaultValue={l.bodyEn} placeholder="Body EN" className={`${inputCls} font-mono`} />
                             <div className="flex items-center gap-3 md:col-span-2">
-                              <label className="text-xs font-bold text-slate-500">⏱ {lang === "fa" ? "دقیقه مطالعه" : "Reading minutes"}</label>
-                              <input name="durationMin" type="number" min={1} defaultValue={l.durationMin} className="w-20 px-2 py-1.5 rounded-lg border border-slate-200 text-sm" />
                               <label className="flex items-center gap-1.5 text-xs font-bold"><input type="checkbox" name="isFree" defaultChecked={l.isFree} className="accent-blue-600" /> Free preview</label>
                               <button className="ms-auto text-xs font-extrabold px-3 py-1.5 rounded-lg bg-navy-900 text-white">Save</button>
                             </div>
