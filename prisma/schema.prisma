@@ -1,0 +1,382 @@
+// PorAI — Database schema (REFERENCE DOCUMENT ONLY — not used at runtime).
+// Runtime uses src/lib/db.ts (node:sqlite, zero dependencies).
+// This file documents the data model 1:1 so a future migration to
+// Postgres/Supabase + Prisma (or Drizzle) is straightforward. See README §6.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------- Users & Auth ----------------
+
+model User {
+  id            String    @id @default(cuid())
+  phone         String    @unique
+  name          String?
+  email         String?
+  avatarUrl     String?
+  // scrypt hash ("scrypt$salt$hash"); null = legacy OTP-era account, must use forgot-password
+  passwordHash  String?
+  // super_admin | admin | editor | instructor | user
+  role          String    @default("user")
+  // active | disabled
+  status        String    @default("active")
+  preferredLang String    @default("fa")
+  notifyEmail   Boolean   @default(true)
+  notifySms     Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  enrollments   Enrollment[]
+  bookmarks     Bookmark[]
+  history       HistoryItem[]
+  notifications Notification[]
+  devices       DeviceSession[]
+}
+
+model DeviceSession {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label      String?
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model OtpRequest {
+  id        String   @id @default(cuid())
+  phone     String
+  codeHash  String
+  expiresAt DateTime
+  attempts  Int      @default(0)
+  consumed  Boolean  @default(false)
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@index([phone, createdAt])
+  @@index([ip, createdAt])
+}
+
+// ---------------- Taxonomy ----------------
+
+model Category {
+  id       String  @id @default(cuid())
+  slug     String  @unique
+  // tutorial | article | course | tool
+  kind     String
+  nameFa   String
+  nameEn   String
+  descFa   String?
+  descEn   String?
+  icon     String?
+  order    Int     @default(0)
+  articles Article[]
+  courses  Course[]
+  tools    Tool[]
+}
+
+model Tag {
+  id     String @id @default(cuid())
+  slug   String @unique
+  nameFa String
+  nameEn String
+  articles Article[]
+}
+
+// ---------------- Learning content ----------------
+
+model Article {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  // article | tutorial
+  kind       String   @default("article")
+  // draft | published | scheduled
+  status     String   @default("draft")
+  publishAt  DateTime?
+  coverUrl   String?
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+  tags       Tag[]
+
+  titleFa   String
+  titleEn   String
+  excerptFa String?
+  excerptEn String?
+  contentFa String  @default("")
+  contentEn String  @default("")
+
+  // beginner | intermediate | advanced
+  difficulty  String?
+  readMinutes Int     @default(5)
+
+  metaTitleFa String?
+  metaTitleEn String?
+  metaDescFa  String?
+  metaDescEn  String?
+
+  views      Int      @default(0)
+  authorName String   @default("Mohammad Pouraei")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([kind, status])
+  @@index([categoryId])
+}
+
+model Course {
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  titleFa     String
+  titleEn     String
+  descFa      String  @default("")
+  descEn      String  @default("")
+  outcomesFa  String  @default("")
+  outcomesEn  String  @default("")
+  audienceFa  String  @default("")
+  audienceEn  String  @default("")
+  prereqFa    String  @default("")
+  prereqEn    String  @default("")
+  coverUrl    String?
+  promoVideoUrl String?
+  // free | paid
+  priceType   String  @default("free")
+  priceIrt    Int?
+  priceUsd    Int?
+  level       String  @default("beginner")
+  // fa | en | both
+  lang        String  @default("both")
+  status      String  @default("draft")
+  featured    Boolean @default(false)
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  instructor  String  @default("Mohammad Pouraei")
+
+  modules     Module[]
+  enrollments Enrollment[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+}
+
+model Module {
+  id      String @id @default(cuid())
+  courseId String
+  course  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  titleFa String
+  titleEn String
+  order   Int    @default(0)
+  lessons Lesson[]
+}
+
+model Lesson {
+  id        String @id @default(cuid())
+  moduleId  String
+  module    Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  titleFa   String
+  titleEn   String
+  bodyFa    String @default("")
+  bodyEn    String @default("")
+  videoUrl  String?
+  durationMin Int  @default(10)
+  isFree    Boolean @default(false)
+  order     Int    @default(0)
+  attachments Attachment[]
+  progress  LessonProgress[]
+}
+
+model Attachment {
+  id       String @id @default(cuid())
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title    String
+  url      String
+}
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, courseId])
+}
+
+model LessonProgress {
+  id       String @id @default(cuid())
+  userId   String
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  done     Boolean @default(false)
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, lessonId])
+}
+
+// ---------------- Engagement ----------------
+
+model Bookmark {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // article | course | tool | project
+  targetType String
+  targetId   String
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, targetType, targetId])
+}
+
+model HistoryItem {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetType String
+  targetId   String
+  title      String
+  url        String
+  createdAt  DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  titleFa   String
+  titleEn   String
+  bodyFa    String?
+  bodyEn    String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// ---------------- Tools directory ----------------
+
+model Tool {
+  id         String  @id @default(cuid())
+  slug       String  @unique
+  name       String
+  logoUrl    String?
+  descFa     String  @default("")
+  descEn     String  @default("")
+  useCasesFa String  @default("")
+  useCasesEn String  @default("")
+  // free | paid | freemium
+  pricing    String  @default("freemium")
+  website    String?
+  reviewFa   String  @default("")
+  reviewEn   String  @default("")
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+  featured   Boolean @default(false)
+  status     String  @default("published")
+  order      Int     @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ---------------- Projects / Case studies ----------------
+
+model Project {
+  id        String  @id @default(cuid())
+  slug      String  @unique
+  titleFa   String
+  titleEn   String
+  coverUrl  String?
+  summaryFa String  @default("")
+  summaryEn String  @default("")
+  problemFa String  @default("")
+  problemEn String  @default("")
+  solutionFa String @default("")
+  solutionEn String @default("")
+  toolsUsed String  @default("")
+  processFa String  @default("")
+  processEn String  @default("")
+  resultFa  String  @default("")
+  resultEn  String  @default("")
+  lessonsFa String  @default("")
+  lessonsEn String  @default("")
+  status    String  @default("published")
+  featured  Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------- Journey (Building in Public) ----------------
+
+model JourneyEntry {
+  id      String   @id @default(cuid())
+  date    DateTime @default(now())
+  titleFa String
+  titleEn String
+  bodyFa  String   @default("")
+  bodyEn  String   @default("")
+  // learning | building | experiment | milestone | lesson
+  kind    String   @default("learning")
+  status  String   @default("published")
+  createdAt DateTime @default(now())
+}
+
+// ---------------- Lead generation ----------------
+
+model Inquiry {
+  id          String   @id @default(cuid())
+  name        String
+  company     String?
+  email       String?
+  phone       String?
+  country     String?
+  projectType String?
+  budget      String?
+  message     String
+  unsure      Boolean  @default(false)
+  // new | contacted | closed
+  status      String   @default("new")
+  createdAt   DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  status    String   @default("new")
+  createdAt DateTime @default(now())
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  lang      String   @default("fa")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+// ---------------- Site ----------------
+
+model SiteSetting {
+  key   String @id
+  value String @default("")
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  action    String
+  detail    String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
