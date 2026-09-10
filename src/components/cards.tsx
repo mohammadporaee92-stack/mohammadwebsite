@@ -5,6 +5,7 @@ import { getDict } from "@/lib/dict";
 import { getSetting } from "@/lib/settings";
 import { getInstagramFeed, instagramUrl, instagramUsername } from "@/lib/instagram";
 import { BookmarkButton } from "./forms";
+import ProfilePhotoImg from "./ProfilePhotoImg";
 import { cx } from "@/lib/utils";
 
 // ---------- helpers ----------
@@ -58,8 +59,7 @@ export async function ProfilePhoto({ lang, size = "lg" }: { lang: Lang; size?: "
   ]);
   const dims = size === "lg" ? "w-44 h-44 sm:w-56 sm:h-56 text-5xl" : size === "md" ? "w-28 h-28 text-3xl" : "w-16 h-16 text-xl";
   if (img) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={img} alt={lang === "fa" ? "محمد پورائی" : "Mohammad Pouraei"} className={cx("object-cover rounded-3xl shadow-2xl shadow-blue-900/25 ring-4 ring-white", dims)} loading="lazy" />;
+    return <ProfilePhotoImg src={img} alt={lang === "fa" ? "محمد پورائی" : "Mohammad Pouraei"} dims={dims} ig={ig} />;
   }
   return (
     <div className={cx("relative grid place-items-center rounded-3xl bg-gradient-to-br from-navy-800 via-navy-900 to-navy-950 text-white shadow-2xl shadow-blue-900/25 ring-4 ring-white overflow-hidden", dims)}>
