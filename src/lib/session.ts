@@ -19,14 +19,21 @@ export function sessionOptions() {
       "SESSION_SECRET must be set in .env and be at least 32 characters."
     );
   }
+  const isProd = process.env.NODE_ENV === "production";
+  // SameSite=None (+Secure) in production so the session survives inside the
+  // proxied preview iframe (cross-site context). On the real first-party
+  // domain this also works fine. Override with SESSION_SAMESITE=lax|strict
+  // if you want tighter CSRF defaults and never embed the site in iframes.
+  const sameSite = (process.env.SESSION_SAMESITE as "lax" | "strict" | "none" | undefined)
+    || (isProd ? "none" : "lax");
   return {
     password,
     cookieName: "porai_session",
     ttl: SESSION_TTL,
     cookieOptions: {
-      secure: process.env.NODE_ENV === "production",
+      secure: isProd ? true : sameSite === "none" ? true : false,
       httpOnly: true,
-      sameSite: "lax" as const,
+      sameSite,
       path: "/",
     },
   };
