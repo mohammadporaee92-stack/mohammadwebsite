@@ -39,6 +39,24 @@ export default async function AdminHome({ params }: { params: Promise<{ lang: st
         ))}
       </div>
 
+      <section className="bg-white rounded-2xl border border-slate-200/80 p-5 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="font-extrabold text-navy-900 text-sm">💾 {lang === "fa" ? "بکاپ دیتابیس" : "Database backup"}</h2>
+          <p className="text-xs text-slate-500 mt-1">
+            {lang === "fa"
+              ? "دانلود فایل دیتابیس (کاربران، محتواها، ثبت‌نام‌ها). هر از گاهی یک نسخه نگه دارید."
+              : "Download the database file (users, content, enrollments). Keep a copy from time to time."}
+          </p>
+        </div>
+        <a
+          href="/api/admin/backup"
+          download
+          className="rounded-xl bg-navy-900 text-white text-sm font-bold px-4 py-2.5 hover:bg-navy-800 transition"
+        >
+          ⬇️ {lang === "fa" ? "دانلود بکاپ" : "Download backup"}
+        </a>
+      </section>
+
       <div className="grid lg:grid-cols-2 gap-4">
         <section className="bg-white rounded-2xl border border-slate-200/80 p-5">
           <h2 className="font-extrabold text-navy-900 text-sm mb-3">🔥 {d.admin.popular}</h2>

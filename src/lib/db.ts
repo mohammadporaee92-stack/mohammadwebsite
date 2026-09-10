@@ -246,6 +246,14 @@ export function run(sql: string, ...params: SQLInputValue[]): { changes: number 
   return { changes: Number(r.changes) };
 }
 
+export function exec(sql: string) {
+  db.exec(sql);
+}
+
+export function dbFilePath(): string {
+  return dbPath();
+}
+
 export function nowIso(): string {
   return new Date().toISOString();
 }
