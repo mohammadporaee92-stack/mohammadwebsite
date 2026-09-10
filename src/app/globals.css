@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-950: #060d24;
+  --color-navy-900: #0a1633;
+  --color-navy-800: #10224d;
+  --color-navy-700: #16305f;
+  --color-tech-600: #1d4ed8;
+  --color-tech-500: #2563eb;
+  --color-tech-400: #3b82f6;
+  --color-sky-glow: #38bdf8;
+  --color-mist-50: #f6f8fc;
+  --color-mist-100: #eef2f8;
+  --color-mist-200: #e2e9f3;
+  --animate-fade-up: fade-up 0.7s ease-out both;
+  --animate-fade-in: fade-in 0.9s ease-out both;
+  --animate-float: float 7s ease-in-out infinite;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #f6f8fc;
+  color: #0a1633;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Elegant prose for bilingual content (rendered from safe markdown-lite) */
+.rich-text {
+  line-height: 2;
+  font-size: 1.02rem;
+  color: #1e2a4a;
+}
+.rich-text h2 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0a1633;
+  margin: 2rem 0 0.9rem;
+  line-height: 1.7;
+}
+.rich-text h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #10224d;
+  margin: 1.6rem 0 0.7rem;
+  line-height: 1.8;
+}
+.rich-text p { margin: 0.9rem 0; }
+.rich-text ul, .rich-text ol {
+  margin: 1rem 0;
+  padding-inline-start: 1.4rem;
+  display: grid;
+  gap: 0.45rem;
+}
+.rich-text ul { list-style: disc; }
+.rich-text ol { list-style: decimal; }
+.rich-text strong { color: #0a1633; }
+.rich-text a {
+  color: #1d4ed8;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.rich-text code {
+  background: #0a1633;
+  color: #bae6fd;
+  padding: 0.1rem 0.45rem;
+  border-radius: 0.4rem;
+  font-size: 0.85em;
+  direction: ltr;
+  display: inline-block;
+}
+.rich-text pre {
+  background: #060d24;
+  color: #e0f2fe;
+  padding: 1.1rem 1.2rem;
+  border-radius: 0.9rem;
+  overflow-x: auto;
+  direction: ltr;
+  text-align: left;
+  margin: 1.2rem 0;
+  font-size: 0.88rem;
+  line-height: 1.8;
+}
+.rich-text pre code {
+  background: transparent;
+  padding: 0;
+  display: inline;
+}
+.rich-text blockquote {
+  border-inline-start: 4px solid #2563eb;
+  background: #eef4ff;
+  padding: 0.8rem 1.1rem;
+  border-radius: 0.6rem;
+  margin: 1.2rem 0;
+  color: #16305f;
+}
+
+[dir="ltr"] .rich-text { line-height: 1.85; }
+
+/* Subtle grid pattern for hero sections (data-inspired, no clichés) */
+.bg-blueprint {
+  background-image:
+    linear-gradient(rgba(147, 197, 253, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(147, 197, 253, 0.09) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 20%, black 40%, transparent 100%);
+}
+
+.bg-dots {
+  background-image: radial-gradient(rgba(37, 99, 235, 0.16) 1.5px, transparent 1.5px);
+  background-size: 22px 22px;
+}
+
+::selection {
+  background: #2563eb;
+  color: #fff;
+}

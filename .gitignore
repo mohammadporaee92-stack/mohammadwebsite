@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+out/
+build/
+dist/
+
+# Database (local dev sqlite) — keep dev.db out of git, keep schema + migrations
+*.db
+*.db-journal
+prisma/migrations/**/migration_lock.toml
+!prisma/migrations/migration_lock.toml
+
+# Uploads (user content)
+/public/uploads/*
+
+# Env & secrets — NEVER commit real secrets
+.env
+.env*.local
+
+# Logs & OS
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+*.pem
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea/
