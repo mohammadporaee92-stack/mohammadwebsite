@@ -61,7 +61,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
           <div className="animate-fade-up">
             <p className="inline-flex items-center gap-2 text-xs font-extrabold tracking-wide bg-white/10 border border-white/15 rounded-full px-4 py-2 text-sky-200">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              {d.hero.badge} · PorAI
+              {d.hero.badge}
             </p>
             <p className="mt-5 text-lg font-bold text-sky-glow">
               {lang === "fa" ? "محمد پورائی" : "Mohammad Pouraei"}
@@ -92,14 +92,8 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
           <div className="relative flex justify-center lg:justify-end animate-fade-in">
             <div className="relative">
               <ProfilePhoto lang={lang} size="lg" />
-              <div className="absolute -top-4 -start-6 bg-white text-navy-900 rounded-2xl shadow-xl px-4 py-2.5 text-xs font-extrabold animate-float">
-                {lang === "fa" ? "🎓 ارشد برق — خواجه نصیر" : "🎓 MSc Electrical Eng."}
-              </div>
-              <div className="absolute -bottom-4 -end-4 bg-white text-navy-900 rounded-2xl shadow-xl px-4 py-2.5 text-xs font-extrabold animate-float" style={{ animationDelay: "1.5s" }}>
-                {lang === "fa" ? "⚙️ صنعت نفت و گاز" : "⚙️ Oil & Gas Industry"}
-              </div>
-              <div className="absolute top-1/2 -end-8 hidden sm:block bg-navy-900/90 backdrop-blur border border-white/15 rounded-2xl px-4 py-2.5 text-xs font-bold text-sky-200 animate-float" style={{ animationDelay: "3s" }}>
-                {lang === "fa" ? "🤖 AI Practitioner" : "🤖 Practical AI"}
+              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap bg-navy-900/90 backdrop-blur border border-white/15 rounded-2xl px-4 py-2.5 text-xs font-bold text-sky-200 animate-float">
+                {lang === "fa" ? "🤖 متخصص کاربردی هوش مصنوعی" : "🤖 Applied AI Specialist"}
               </div>
             </div>
           </div>

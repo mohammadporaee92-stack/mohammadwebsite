@@ -84,6 +84,7 @@ export default async function CoursePage({ params }: { params: Promise<{ lang: s
                 {course.priceType === "free" ? d.home.free : d.home.paid}
               </span>
               <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20">{levelLabel}</span>
+              <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20">📝 {d.courses.textBased}</span>
               <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20">{fmtNum(allLessons.length, lang)} {d.home.lessons}</span>
               <span className="px-3 py-1 rounded-full bg-white/15 border border-white/20">{fmtNum(minutes, lang)} {d.home.min}</span>
             </div>
@@ -178,7 +179,7 @@ export default async function CoursePage({ params }: { params: Promise<{ lang: s
                             <span className="flex items-center gap-2.5 font-semibold text-slate-700">
                               <span className={cx("grid place-items-center w-6 h-6 rounded-full text-xs font-extrabold shrink-0",
                                 done ? "bg-emerald-500 text-white" : locked ? "bg-slate-200 text-slate-500" : "bg-blue-100 text-tech-600")}>
-                                {done ? "✓" : locked ? "🔒" : "▶"}
+                                {done ? "✓" : locked ? "🔒" : "📝"}
                               </span>
                               {pick(l, "title", lang)}
                               {l.isFree && <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">{d.courses.freeLesson}</span>}

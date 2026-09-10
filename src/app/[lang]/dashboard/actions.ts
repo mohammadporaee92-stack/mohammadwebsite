@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { Users, Devices, Notifs } from "@/lib/db";
 import { getSession } from "@/lib/session";
+import { hashPassword, verifyPassword, isPasswordStrongEnough } from "@/lib/password";
 
 async function requireUser() {
   const session = await getSession();
@@ -57,4 +58,20 @@ export async function markNotificationsRead() {
   const { user } = await requireUser();
   Notifs.markAllRead(user.id);
   revalidatePath("/", "layout");
+}
+
+export async function changePassword(formData: FormData) {
+  const { user } = await requireUser();
+  const lang = String(formData.get("lang") || "fa");
+  const current = String(formData.get("current") || "");
+  const next = String(formData.get("next") || "");
+  if (!isPasswordStrongEnough(next)) {
+    redirect(`/${lang}/dashboard/settings?pw=weak`);
+  }
+  // accounts without a password (old OTP era) can set one without the current password
+  if (user.passwordHash && !(await verifyPassword(current, user.passwordHash))) {
+    redirect(`/${lang}/dashboard/settings?pw=wrong`);
+  }
+  Users.update(user.id, { passwordHash: await hashPassword(next) });
+  redirect(`/${lang}/dashboard/settings?pw=changed`);
 }

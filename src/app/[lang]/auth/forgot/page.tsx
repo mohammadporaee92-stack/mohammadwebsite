@@ -5,16 +5,16 @@ import { isLang, type Lang } from "@/lib/i18n";
 import { getDict } from "@/lib/dict";
 import { getCurrentUser, isStaff } from "@/lib/session";
 import { absoluteUrl } from "@/lib/utils";
-import { PasswordLoginForm } from "@/components/forms";
+import { ForgotPasswordForm } from "@/components/forms";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const l: Lang = isLang(lang) ? lang : "fa";
   const d = getDict(l);
-  return { title: d.auth.loginTitle, robots: { index: false, follow: false }, alternates: { canonical: absoluteUrl(`/${l}/auth/login`) } };
+  return { title: d.auth.forgotTitle, robots: { index: false, follow: false }, alternates: { canonical: absoluteUrl(`/${l}/auth/forgot`) } };
 }
 
-export default async function LoginPage({ params }: { params: Promise<{ lang: string }> }) {
+export default async function ForgotPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang: raw } = await params;
   if (!isLang(raw)) notFound();
   const lang: Lang = raw;
@@ -27,25 +27,32 @@ export default async function LoginPage({ params }: { params: Promise<{ lang: st
     <div className="mx-auto max-w-md px-4 sm:px-6 py-14">
       <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xl p-8">
         <div className="text-center mb-6">
-          <p className="text-4xl">🔐</p>
-          <h1 className="mt-3 text-2xl font-extrabold text-navy-900">{d.auth.loginTitle}</h1>
-          <p className="mt-1.5 text-sm text-slate-500">{d.auth.loginSub}</p>
+          <p className="text-4xl">🔑</p>
+          <h1 className="mt-3 text-2xl font-extrabold text-navy-900">{d.auth.forgotTitle}</h1>
+          <p className="mt-1.5 text-sm text-slate-500">{d.auth.forgotSub}</p>
         </div>
-        <PasswordLoginForm
+        <ForgotPasswordForm
           lang={lang}
           dict={{
             phoneLabel: d.auth.phoneLabel,
             phonePlaceholder: d.auth.phonePlaceholder,
-            passwordLabel: d.auth.passwordLabel,
+            sendCode: d.auth.sendCode,
+            codeLabel: d.auth.codeLabel,
+            newPasswordLabel: d.auth.newPasswordLabel,
             passwordPlaceholder: d.auth.passwordPlaceholder,
-            loginButton: d.auth.loginButton,
-            forgotLink: d.auth.forgotLink,
+            resetButton: d.auth.resetButton,
+            resetDone: d.auth.resetDone,
+            backToLogin: d.auth.backToLogin,
+            resend: d.auth.resend,
+            backToPhone: d.auth.backToPhone,
+            demoBox: d.auth.demoBox,
+            demoHint: d.auth.demoHint,
             errors: d.auth.errors,
           }}
         />
         <p className="mt-6 text-center text-sm text-slate-500">
-          <Link href={`/${lang}/auth/register`} className="font-extrabold text-tech-600 hover:text-tech-500">
-            {d.auth.noAccount}
+          <Link href={`/${lang}/auth/login`} className="font-extrabold text-tech-600 hover:text-tech-500">
+            {d.auth.backToLogin}
           </Link>
         </p>
       </div>

@@ -219,6 +219,13 @@ export function migrate() {
   if (migrated) return;
   migrated = true;
   db.exec(SCHEMA);
+  // password auth (2026-09): add passwordHash to DBs created before this column existed.
+  try {
+    const cols = db.prepare("PRAGMA table_info(users)").all() as Array<{ name: string }>;
+    if (!cols.some((c) => c.name === "passwordHash")) {
+      db.exec("ALTER TABLE users ADD COLUMN passwordHash TEXT");
+    }
+  } catch { /* table missing would have failed above already */ }
 }
 migrate();
 
@@ -253,7 +260,7 @@ const b = (v: unknown) => v === 1 || v === true;
 
 export interface User {
   id: string; phone: string; name: string | null; email: string | null;
-  avatarUrl: string | null; role: string; status: string; preferredLang: string;
+  avatarUrl: string | null; passwordHash: string | null; role: string; status: string; preferredLang: string;
   notifyEmail: boolean; notifySms: boolean; createdAt: string; updatedAt: string;
 }
 
@@ -327,16 +334,16 @@ export const Users = {
     const r = one<Row>("SELECT * FROM users WHERE phone = ?", phone);
     return r ? mapUser(r) : null;
   },
-  create(d: { phone: string; name?: string | null; role?: string; preferredLang?: string }): User {
+  create(d: { phone: string; name?: string | null; role?: string; preferredLang?: string; passwordHash?: string | null }): User {
     const id = uid();
     const now = nowIso();
     run(
-      "INSERT INTO users (id, phone, name, role, preferredLang, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      id, d.phone, d.name || null, d.role || "user", d.preferredLang || "fa", now, now
+      "INSERT INTO users (id, phone, name, passwordHash, role, preferredLang, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      id, d.phone, d.name || null, d.passwordHash || null, d.role || "user", d.preferredLang || "fa", now, now
     );
     return Users.byId(id)!;
   },
-  update(id: string, patch: Partial<{ name: string | null; email: string | null; avatarUrl: string | null; role: string; status: string; preferredLang: string; notifyEmail: boolean; notifySms: boolean }>) {
+  update(id: string, patch: Partial<{ name: string | null; email: string | null; avatarUrl: string | null; passwordHash: string | null; role: string; status: string; preferredLang: string; notifyEmail: boolean; notifySms: boolean }>) {
     const sets: string[] = [];
     const vals: SQLInputValue[] = [];
     for (const [k, v] of Object.entries(patch)) {

@@ -20,6 +20,8 @@ model User {
   name          String?
   email         String?
   avatarUrl     String?
+  // scrypt hash ("scrypt$salt$hash"); null = legacy OTP-era account, must use forgot-password
+  passwordHash  String?
   // super_admin | admin | editor | instructor | user
   role          String    @default("user")
   // active | disabled

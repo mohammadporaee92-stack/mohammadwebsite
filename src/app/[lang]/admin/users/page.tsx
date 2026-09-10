@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { isLang, type Lang, fmtNum, fmtDate } from "@/lib/i18n";
 import { getDict } from "@/lib/dict";
 import { Users, all } from "@/lib/db";
-import { setUserRole, setUserStatus } from "../actions";
+import { setUserRole, setUserStatus, adminSetPassword } from "../actions";
 import { cx } from "@/lib/utils";
 
 export default async function AdminUsers({ params, searchParams }: {
@@ -47,6 +47,7 @@ export default async function AdminUsers({ params, searchParams }: {
               <th className="text-start font-bold px-4 py-3">Courses</th>
               <th className="text-start font-bold px-4 py-3">Role</th>
               <th className="text-start font-bold px-4 py-3">Status</th>
+              <th className="text-start font-bold px-4 py-3">{lang === "fa" ? "رمز جدید" : "New password"}</th>
               <th className="text-start font-bold px-4 py-3">Joined</th>
             </tr>
           </thead>
@@ -80,6 +81,15 @@ export default async function AdminUsers({ params, searchParams }: {
                       <option value="active">active</option>
                       <option value="disabled">disabled</option>
                     </select>
+                    <button className="text-xs font-extrabold text-tech-600">✓</button>
+                  </form>
+                </td>
+                <td className="px-4 py-2.5">
+                  <form action={adminSetPassword} className="flex gap-1 items-center">
+                    <input type="hidden" name="lang" value={lang} />
+                    <input type="hidden" name="id" value={u.id} />
+                    <input name="password" type="password" dir="ltr" minLength={6} maxLength={128} placeholder={u.passwordHash ? "••••••" : (lang === "fa" ? "بدون رمز" : "no password")}
+                      className="w-24 text-xs px-2 py-1.5 rounded-lg border border-slate-200 bg-white" />
                     <button className="text-xs font-extrabold text-tech-600">✓</button>
                   </form>
                 </td>

@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { getSession, canManageContent, canManageUsers, canManageSettings } from "@/lib/session";
 import {
   Articles, Courses, Users, Tools, Projects, Journey, Tags,
-  Settings, Inquiries, Messages, Subs, Activity, one, run,
+  Settings, Inquiries, Messages, Subs, Activity,
 } from "@/lib/db";
 
 type Perm = "content" | "users" | "settings";
@@ -272,6 +272,19 @@ export async function setUserStatus(formData: FormData) {
   back(lang, "users");
 }
 
+export async function adminSetPassword(formData: FormData) {
+  const s = await staffOrThrow("users");
+  const lang = str(formData, "lang") || "fa";
+  const id = str(formData, "id");
+  const pw = str(formData, "password");
+  const { hashPassword, isPasswordStrongEnough } = await import("@/lib/password");
+  if (pw && isPasswordStrongEnough(pw)) {
+    Users.update(id, { passwordHash: await hashPassword(pw) });
+    Activity.log(s.userId!, "admin_password_set", id);
+  }
+  back(lang, "users");
+}
+
 // ---------------- tools / projects / journey ----------------
 
 export async function saveTool(formData: FormData) {
@@ -412,9 +425,6 @@ export async function saveSettings(formData: FormData) {
     if (k === "lang") continue;
     Settings.set(k, String(v));
   }
-  // touch updated marker
-  run("SELECT 1");
-  void one;
   Activity.log(s.userId!, "settings_updated", "");
   back(lang, "settings");
 }

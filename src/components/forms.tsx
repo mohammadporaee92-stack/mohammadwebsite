@@ -236,25 +236,180 @@ export function LessonCompleteButton({ lessonId, initial, labels }: {
   );
 }
 
-// ---------- OTP login / register (single passwordless flow) ----------
+// ---------- password auth forms ----------
 
-export function OtpLoginForm({ lang, mode, dict }: {
-  lang: Lang; mode: "login" | "register";
+const inputCls = "w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-tech-500 bg-white";
+const submitCls = "w-full px-6 py-3.5 rounded-xl bg-gradient-to-r from-tech-500 to-blue-600 text-white font-extrabold shadow-lg shadow-blue-900/20 hover:brightness-110 transition disabled:opacity-60";
+
+function FormError({ message }: { message: string | null }) {
+  if (!message) return null;
+  return <p className="text-sm font-bold text-rose-600 bg-rose-50 border border-rose-100 rounded-xl px-4 py-2.5">{message}</p>;
+}
+
+function DemoCodeBox({ code, title, hint }: { code: string; title: string; hint: string }) {
+  return (
+    <div className="rounded-xl border-2 border-dashed border-amber-400 bg-amber-50 px-4 py-3 text-center">
+      <p className="text-xs font-bold text-amber-700">{title}</p>
+      <p className="text-2xl font-extrabold tracking-[0.4em] text-navy-900 mt-1" dir="ltr">{code}</p>
+      <p className="text-[11px] text-amber-600 mt-1">{hint}</p>
+    </div>
+  );
+}
+
+export function PasswordLoginForm({ lang, dict }: {
+  lang: Lang;
   dict: {
-    phoneLabel: string; phonePlaceholder: string; sendCode: string; codeLabel: string;
-    verify: string; resend: string; backToPhone: string; demoBox: string; demoHint: string;
-    nameLabel: string; errors: Record<string, string>;
+    phoneLabel: string; phonePlaceholder: string; passwordLabel: string; passwordPlaceholder: string;
+    loginButton: string; forgotLink: string; errors: Record<string, string>;
   };
 }) {
-  const [step, setStep] = useState<"phone" | "code">("phone");
   const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [show, setShow] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, password }),
+      });
+      const j = await res.json();
+      if (!res.ok) {
+        setError(dict.errors[j.error] || dict.errors.wrong_password);
+        return;
+      }
+      router.push(j.isStaff ? `/${lang}/admin` : `/${lang}/dashboard`);
+      router.refresh();
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <form onSubmit={submit} className="space-y-5">
+      <div>
+        <label htmlFor="li-phone" className="block text-sm font-bold text-navy-900 mb-1.5">{dict.phoneLabel}</label>
+        <input id="li-phone" inputMode="tel" dir="ltr" autoComplete="username" value={phone} onChange={(e) => setPhone(e.target.value)}
+          placeholder={dict.phonePlaceholder} required
+          className={`${inputCls} text-left tracking-widest font-bold`} />
+      </div>
+      <div>
+        <label htmlFor="li-pass" className="block text-sm font-bold text-navy-900 mb-1.5">{dict.passwordLabel}</label>
+        <div className="relative">
+          <input id="li-pass" type={show ? "text" : "password"} dir="ltr" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)}
+            placeholder={dict.passwordPlaceholder} required
+            className={`${inputCls} text-left pe-12`} />
+          <button type="button" onClick={() => setShow(!show)} aria-label="show password"
+            className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy-900 text-lg">
+            {show ? "🙈" : "👁"}
+          </button>
+        </div>
+      </div>
+      <FormError message={error} />
+      <button disabled={loading || !phone || !password} className={submitCls}>
+        {loading ? "…" : dict.loginButton}
+      </button>
+      <p className="text-center text-sm">
+        <Link href={`/${lang}/auth/forgot`} className="font-bold text-tech-600 hover:text-tech-500">{dict.forgotLink}</Link>
+      </p>
+    </form>
+  );
+}
+
+export function RegisterForm({ lang, dict }: {
+  lang: Lang;
+  dict: {
+    nameLabel: string; phoneLabel: string; phonePlaceholder: string; passwordLabel: string; passwordPlaceholder: string;
+    registerButton: string; errors: Record<string, string>;
+  };
+}) {
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [show, setShow] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, password, lang }),
+      });
+      const j = await res.json();
+      if (!res.ok) {
+        setError(dict.errors[j.error] || dict.errors.invalid_phone);
+        return;
+      }
+      router.push(j.isStaff ? `/${lang}/admin` : `/${lang}/dashboard`);
+      router.refresh();
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <form onSubmit={submit} className="space-y-5">
+      <div>
+        <label htmlFor="rg-name" className="block text-sm font-bold text-navy-900 mb-1.5">{dict.nameLabel}</label>
+        <input id="rg-name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)}
+          required minLength={2} maxLength={80} className={inputCls} />
+      </div>
+      <div>
+        <label htmlFor="rg-phone" className="block text-sm font-bold text-navy-900 mb-1.5">{dict.phoneLabel}</label>
+        <input id="rg-phone" inputMode="tel" dir="ltr" autoComplete="username" value={phone} onChange={(e) => setPhone(e.target.value)}
+          placeholder={dict.phonePlaceholder} required
+          className={`${inputCls} text-left tracking-widest font-bold`} />
+      </div>
+      <div>
+        <label htmlFor="rg-pass" className="block text-sm font-bold text-navy-900 mb-1.5">{dict.passwordLabel}</label>
+        <div className="relative">
+          <input id="rg-pass" type={show ? "text" : "password"} dir="ltr" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)}
+            placeholder={dict.passwordPlaceholder} required minLength={6}
+            className={`${inputCls} text-left pe-12`} />
+          <button type="button" onClick={() => setShow(!show)} aria-label="show password"
+            className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy-900 text-lg">
+            {show ? "🙈" : "👁"}
+          </button>
+        </div>
+      </div>
+      <FormError message={error} />
+      <button disabled={loading || !name || !phone || password.length < 6} className={submitCls}>
+        {loading ? "…" : dict.registerButton}
+      </button>
+    </form>
+  );
+}
+
+export function ForgotPasswordForm({ lang, dict }: {
+  lang: Lang;
+  dict: {
+    phoneLabel: string; phonePlaceholder: string; sendCode: string; codeLabel: string;
+    newPasswordLabel: string; passwordPlaceholder: string; resetButton: string; resetDone: string;
+    backToLogin: string; resend: string; backToPhone: string; demoBox: string; demoHint: string;
+    errors: Record<string, string>;
+  };
+}) {
+  const [step, setStep] = useState<"phone" | "code" | "done">("phone");
+  const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
+  const [password, setPassword] = useState("");
   const [demoCode, setDemoCode] = useState<string | null>(null);
   const [cooldown, setCooldown] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   function tick(sec: number) {
     setCooldown(sec);
@@ -293,69 +448,73 @@ export function OtpLoginForm({ lang, mode, dict }: {
     }
   }
 
-  async function verify() {
+  async function reset() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/verify", {
+      const res = await fetch("/api/auth/reset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, code, name: mode === "register" ? name : undefined, lang }),
+        body: JSON.stringify({ phone, code, password }),
       });
       const j = await res.json();
       if (!res.ok) {
         setError(dict.errors[j.error] || dict.errors.wrong_code);
         return;
       }
-      router.push(j.isStaff ? `/${lang}/admin` : `/${lang}/dashboard`);
-      router.refresh();
+      setStep("done");
     } finally {
       setLoading(false);
     }
+  }
+
+  if (step === "done") {
+    return (
+      <div className="space-y-5 text-center">
+        <p className="flex items-center justify-center gap-2 text-emerald-700 font-bold bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-4">
+          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="m5 13 4 4L19 7" /></svg>
+          {dict.resetDone}
+        </p>
+        <Link href={`/${lang}/auth/login`} className="inline-block px-8 py-3 rounded-xl bg-navy-900 text-white font-extrabold hover:bg-navy-700 transition">
+          {dict.backToLogin}
+        </Link>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-5">
       {step === "phone" ? (
         <>
-          {mode === "register" && (
-            <div>
-              <label htmlFor="otp-name" className="block text-sm font-bold text-navy-900 mb-1.5">{dict.nameLabel}</label>
-              <input id="otp-name" value={name} onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-tech-500 bg-white" />
-            </div>
-          )}
           <div>
-            <label htmlFor="otp-phone" className="block text-sm font-bold text-navy-900 mb-1.5">{dict.phoneLabel}</label>
-            <input id="otp-phone" inputMode="tel" dir="ltr" value={phone} onChange={(e) => setPhone(e.target.value)}
+            <label htmlFor="fp-phone" className="block text-sm font-bold text-navy-900 mb-1.5">{dict.phoneLabel}</label>
+            <input id="fp-phone" inputMode="tel" dir="ltr" value={phone} onChange={(e) => setPhone(e.target.value)}
               placeholder={dict.phonePlaceholder}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-tech-500 bg-white text-left tracking-widest font-bold" />
+              className={`${inputCls} text-left tracking-widest font-bold`} />
           </div>
-          {error && <p className="text-sm font-bold text-rose-600 bg-rose-50 border border-rose-100 rounded-xl px-4 py-2.5">{error}</p>}
-          <button onClick={requestCode} disabled={loading || !phone}
-            className="w-full px-6 py-3.5 rounded-xl bg-gradient-to-r from-tech-500 to-blue-600 text-white font-extrabold shadow-lg shadow-blue-900/20 hover:brightness-110 transition disabled:opacity-60">
+          <FormError message={error} />
+          <button onClick={requestCode} disabled={loading || !phone} className={submitCls}>
             {loading ? "…" : dict.sendCode}
           </button>
         </>
       ) : (
         <>
           <div>
-            <label htmlFor="otp-code" className="block text-sm font-bold text-navy-900 mb-1.5">{dict.codeLabel}</label>
-            <input id="otp-code" inputMode="numeric" dir="ltr" value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+            <label htmlFor="fp-code" className="block text-sm font-bold text-navy-900 mb-1.5">{dict.codeLabel}</label>
+            <input id="fp-code" inputMode="numeric" dir="ltr" value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
               placeholder="••••••"
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-tech-500 bg-white text-center tracking-[0.5em] text-xl font-extrabold" />
+              className={`${inputCls} text-center tracking-[0.5em] text-xl font-extrabold`} />
           </div>
-          {demoCode && (
-            <div className="rounded-xl border-2 border-dashed border-amber-400 bg-amber-50 px-4 py-3 text-center">
-              <p className="text-xs font-bold text-amber-700">{dict.demoBox}</p>
-              <p className="text-2xl font-extrabold tracking-[0.4em] text-navy-900 mt-1" dir="ltr">{demoCode}</p>
-              <p className="text-[11px] text-amber-600 mt-1">{dict.demoHint}</p>
-            </div>
-          )}
-          {error && <p className="text-sm font-bold text-rose-600 bg-rose-50 border border-rose-100 rounded-xl px-4 py-2.5">{error}</p>}
-          <button onClick={verify} disabled={loading || code.length !== 6}
-            className="w-full px-6 py-3.5 rounded-xl bg-gradient-to-r from-tech-500 to-blue-600 text-white font-extrabold shadow-lg shadow-blue-900/20 hover:brightness-110 transition disabled:opacity-60">
-            {loading ? "…" : dict.verify}
+          {demoCode && <DemoCodeBox code={demoCode} title={dict.demoBox} hint={dict.demoHint} />}
+          <div>
+            <label htmlFor="fp-pass" className="block text-sm font-bold text-navy-900 mb-1.5">{dict.newPasswordLabel}</label>
+            <input id="fp-pass" type="password" dir="ltr" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)}
+              placeholder={dict.passwordPlaceholder}
+              className={`${inputCls} text-left`} />
+          </div>
+          <FormError message={error} />
+          <button onClick={reset} disabled={loading || code.length !== 6 || password.length < 6} className={submitCls}>
+            {loading ? "…" : dict.resetButton}
           </button>
           <div className="flex items-center justify-between text-sm">
             <button onClick={() => setStep("phone")} className="font-bold text-slate-500 hover:text-navy-900 transition">{dict.backToPhone}</button>

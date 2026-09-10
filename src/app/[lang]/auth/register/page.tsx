@@ -5,12 +5,13 @@ import { isLang, type Lang } from "@/lib/i18n";
 import { getDict } from "@/lib/dict";
 import { getCurrentUser, isStaff } from "@/lib/session";
 import { absoluteUrl } from "@/lib/utils";
-import { OtpLoginForm } from "@/components/forms";
+import { RegisterForm } from "@/components/forms";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const l: Lang = isLang(lang) ? lang : "fa";
-  return { title: l === "fa" ? "ثبت‌نام" : "Sign up", robots: { index: false, follow: false }, alternates: { canonical: absoluteUrl(`/${l}/auth/register`) } };
+  const d = getDict(l);
+  return { title: d.auth.registerTitle, robots: { index: false, follow: false }, alternates: { canonical: absoluteUrl(`/${l}/auth/register`) } };
 }
 
 export default async function RegisterPage({ params }: { params: Promise<{ lang: string }> }) {
@@ -27,29 +28,24 @@ export default async function RegisterPage({ params }: { params: Promise<{ lang:
       <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xl p-8">
         <div className="text-center mb-6">
           <p className="text-4xl">🚀</p>
-          <h1 className="mt-3 text-2xl font-extrabold text-navy-900">{lang === "fa" ? "ساخت حساب" : "Create account"}</h1>
-          <p className="mt-1.5 text-sm text-slate-500">{d.auth.loginSub}</p>
+          <h1 className="mt-3 text-2xl font-extrabold text-navy-900">{d.auth.registerTitle}</h1>
+          <p className="mt-1.5 text-sm text-slate-500">{d.auth.registerSub}</p>
         </div>
-        <OtpLoginForm
+        <RegisterForm
           lang={lang}
-          mode="register"
           dict={{
+            nameLabel: d.auth.nameLabel,
             phoneLabel: d.auth.phoneLabel,
             phonePlaceholder: d.auth.phonePlaceholder,
-            sendCode: d.auth.sendCode,
-            codeLabel: d.auth.codeLabel,
-            verify: d.auth.verify,
-            resend: d.auth.resend,
-            backToPhone: d.auth.backToPhone,
-            demoBox: d.auth.demoBox,
-            demoHint: d.auth.demoHint,
-            nameLabel: d.dashboard.name,
+            passwordLabel: d.auth.passwordLabel,
+            passwordPlaceholder: d.auth.passwordPlaceholder,
+            registerButton: d.auth.registerButton,
             errors: d.auth.errors,
           }}
         />
         <p className="mt-6 text-center text-sm text-slate-500">
           <Link href={`/${lang}/auth/login`} className="font-extrabold text-tech-600 hover:text-tech-500">
-            {lang === "fa" ? "حساب داری؟ ورود" : "Have an account? Login"}
+            {d.auth.haveAccount}
           </Link>
         </p>
       </div>

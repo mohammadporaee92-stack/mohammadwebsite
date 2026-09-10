@@ -75,7 +75,11 @@ export default async function AdminCourseEdit({ params }: { params: Promise<{ la
         </div>
         <div className="md:col-span-2 grid md:grid-cols-2 gap-4">
           <UploadField name="coverUrl" label="Cover image" initial={course?.coverUrl || ""} />
-          <div><label className="block text-xs font-extrabold mb-1">Promo video URL</label><input name="promoVideoUrl" defaultValue={course?.promoVideoUrl || ""} dir="ltr" className={inputCls} /></div>
+          <div className="flex items-end">
+            <p className="text-xs font-bold text-slate-500 bg-blue-50 border border-blue-100 rounded-xl px-3 py-2.5 w-full">
+              📝 {lang === "fa" ? "دوره‌های این سایت متنی هستند؛ بدون ویدیو." : "Courses on this site are text-based; no video."}
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-4 md:col-span-2">
           <label className="flex items-center gap-2 text-sm font-bold"><input type="checkbox" name="featured" defaultChecked={course?.featured} className="w-4 h-4 accent-blue-600" /> Featured</label>
@@ -139,9 +143,9 @@ export default async function AdminCourseEdit({ params }: { params: Promise<{ la
                             <input name="titleEn" defaultValue={l.titleEn} placeholder="Title EN" className={inputCls} />
                             <textarea name="bodyFa" rows={4} defaultValue={l.bodyFa} placeholder="Body FA" className={`${inputCls} font-mono`} />
                             <textarea name="bodyEn" rows={4} defaultValue={l.bodyEn} placeholder="Body EN" className={`${inputCls} font-mono`} />
-                            <input name="videoUrl" defaultValue={l.videoUrl || ""} placeholder="Video URL (mp4/youtube)" dir="ltr" className={inputCls} />
-                            <div className="flex items-center gap-3">
-                              <input name="durationMin" type="number" defaultValue={l.durationMin} className="w-20 px-2 py-1.5 rounded-lg border border-slate-200 text-sm" />
+                            <div className="flex items-center gap-3 md:col-span-2">
+                              <label className="text-xs font-bold text-slate-500">⏱ {lang === "fa" ? "دقیقه مطالعه" : "Reading minutes"}</label>
+                              <input name="durationMin" type="number" min={1} defaultValue={l.durationMin} className="w-20 px-2 py-1.5 rounded-lg border border-slate-200 text-sm" />
                               <label className="flex items-center gap-1.5 text-xs font-bold"><input type="checkbox" name="isFree" defaultChecked={l.isFree} className="accent-blue-600" /> Free preview</label>
                               <button className="ms-auto text-xs font-extrabold px-3 py-1.5 rounded-lg bg-navy-900 text-white">Save</button>
                             </div>

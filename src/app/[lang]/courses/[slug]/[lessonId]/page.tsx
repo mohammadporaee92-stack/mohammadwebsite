@@ -8,29 +8,6 @@ import { renderRich } from "@/lib/content";
 import { LessonCompleteButton } from "@/components/forms";
 import { cx } from "@/lib/utils";
 
-function VideoEmbed({ url }: { url: string }) {
-  const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{6,})/);
-  if (yt) {
-    return (
-      <div className="rounded-2xl overflow-hidden bg-black aspect-video">
-        <iframe src={`https://www.youtube.com/embed/${yt[1]}`} title="video" className="w-full h-full" allowFullScreen loading="lazy" />
-      </div>
-    );
-  }
-  if (/\.(mp4|webm)(\?|$)/.test(url)) {
-    return (
-      <video controls preload="metadata" className="rounded-2xl bg-black w-full aspect-video">
-        <source src={url} />
-      </video>
-    );
-  }
-  return (
-    <a href={url} target="_blank" rel="noopener" className="block rounded-2xl bg-navy-950 text-white p-8 text-center font-bold hover:bg-navy-800 transition">
-      ▶ {url}
-    </a>
-  );
-}
-
 export default async function LessonPage({ params }: { params: Promise<{ lang: string; slug: string; lessonId: string }> }) {
   const { lang: raw, slug, lessonId } = await params;
   if (!isLang(raw)) notFound();
@@ -65,19 +42,10 @@ export default async function LessonPage({ params }: { params: Promise<{ lang: s
           <Link href={`/${lang}/courses/${slug}`} className="hover:text-navy-900">{pick(course, "title", lang)}</Link>
         </nav>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-navy-900 leading-snug">{pick(lesson, "title", lang)}</h1>
-        <p className="mt-2 text-sm text-slate-500">{fmtNum(lesson.durationMin, lang)} {d.home.min} · {flat[idx]?.moduleTitle}</p>
-
-        <div className="mt-5">
-          {lesson.videoUrl ? (
-            <VideoEmbed url={lesson.videoUrl} />
-          ) : (
-            <div className="rounded-2xl bg-gradient-to-br from-navy-800 to-navy-950 text-white p-10 text-center relative overflow-hidden">
-              <div className="absolute inset-0 bg-blueprint" aria-hidden="true" />
-              <p className="relative text-4xl">🎬</p>
-              <p className="relative mt-2 font-bold text-slate-300">{lang === "fa" ? "ویدیو به‌زودی اضافه می‌شود" : "Video coming soon"}</p>
-            </div>
-          )}
-        </div>
+        <p className="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-50 text-tech-600 text-xs font-extrabold">📝 {d.courses.textBased}</span>
+          <span>{fmtNum(lesson.durationMin, lang)} {d.home.min} · {flat[idx]?.moduleTitle}</span>
+        </p>
 
         {(pick(lesson, "body", lang)) && (
           <article className="mt-6 bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8">
