@@ -1,3 +1,4 @@
+import "./load-env";
 // PorAI extra seed — thin wrapper (logic lives in src/lib/seeds so production can run it too).
 import { runExtraSeed } from "../src/lib/seeds/extra";
 

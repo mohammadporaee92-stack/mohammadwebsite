@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return {
     title, description: desc,
     alternates: { canonical: url, languages: { fa: absoluteUrl(`/fa/learn/${slug}`), en: absoluteUrl(`/en/learn/${slug}`) } },
-    openGraph: { type: "article", title, description: desc, url, publishedTime: a.createdAt, modifiedTime: a.updatedAt, authors: ["Mohammad Pouraei"] },
+    openGraph: { type: "article", title, description: desc, url, publishedTime: a.createdAt, modifiedTime: a.updatedAt, authors: ["Mohammad Poraee"] },
     twitter: { card: "summary_large_image", title, description: desc },
   };
 }

@@ -1,8 +1,14 @@
+import { isTrustedOrigin } from "@/lib/request-origin";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  if (pathname.startsWith("/api/") && pathname !== "/api/setup" &&
+      !["GET", "HEAD", "OPTIONS"].includes(req.method) &&
+      !isTrustedOrigin(req, process.env.NEXT_PUBLIC_SITE_URL)) {
+    return NextResponse.json({ error: "forbidden_origin" }, { status: 403 });
+  }
   // Default language is Persian (/fa). Every page lives under /fa or /en.
   if (pathname === "/") {
     return NextResponse.redirect(new URL("/fa", req.url));
@@ -16,5 +22,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/fa/:path*", "/en/:path*"],
+  matcher: ["/api/:path*", "/", "/fa/:path*", "/en/:path*"],
 };

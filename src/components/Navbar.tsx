@@ -29,7 +29,7 @@ export default async function Navbar({ lang }: { lang: Lang }) {
         <div className="flex items-center justify-between h-16 gap-3">
           <Logo lang={lang} dark />
 
-          <nav className="hidden lg:flex items-center gap-1 text-sm font-medium" aria-label="main">
+          <nav className="hidden xl:flex items-center gap-1 text-sm font-medium" aria-label="main">
             {links.map((l) => (
               <Link
                 key={l.href}
@@ -47,7 +47,7 @@ export default async function Navbar({ lang }: { lang: Lang }) {
             </Link>
           </nav>
 
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden xl:flex items-center gap-2">
             <SearchButton lang={lang} label={d.nav.search} />
             <a
               href={`https://instagram.com/${instagram}`}
@@ -86,7 +86,7 @@ export default async function Navbar({ lang }: { lang: Lang }) {
             )}
           </div>
 
-          <div className="flex lg:hidden items-center gap-2">
+          <div className="flex xl:hidden items-center gap-2">
             <SearchButton lang={lang} label={d.nav.search} />
             <LangSwitch lang={lang} />
             <MobileMenu

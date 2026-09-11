@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLang, type Lang } from "@/lib/i18n";
@@ -36,7 +37,8 @@ export default async function LearnHub({ params }: { params: Promise<{ lang: str
         <div className="relative max-w-2xl">
           <h1 className="text-3xl sm:text-4xl font-extrabold">{d.home.learnTitle}</h1>
           <p className="mt-3 text-slate-300 leading-7">{d.home.learnSub}</p>
-          <p className="mt-4 inline-flex text-sm font-bold text-sky-glow border-s-2 border-sky-glow ps-3">{d.hero.philosophy}</p>
+          <Link href={"/" + lang + "/courses/ai-from-zero"} className="mt-5 inline-flex rounded-xl bg-white px-5 py-3 font-extrabold text-navy-900">{lang === "fa" ? "شروع دوره متنی رایگان" : "Start the free text course"}</Link>
+          <p className="mt-4 block text-sm font-bold text-sky-glow border-s-2 border-sky-glow ps-3">{d.hero.philosophy}</p>
         </div>
       </section>
 
@@ -49,7 +51,7 @@ export default async function LearnHub({ params }: { params: Promise<{ lang: str
         </div>
       </section>
 
-      <section aria-label="latest">
+      <section id="tutorials" className="scroll-mt-24" aria-label="latest">
         <SectionHeading title={d.home.latestArticles} align="start" />
         <div className="grid md:grid-cols-3 gap-5">
           {latest.map((a) => (

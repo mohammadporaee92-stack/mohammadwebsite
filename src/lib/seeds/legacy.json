@@ -1,0 +1,28 @@
+{
+  "articles": [
+    "how-ai-actually-works",
+    "prompt-engineering-30-minutes",
+    "chatgpt-for-electrical-engineers",
+    "ai-in-oil-and-gas",
+    "first-automation",
+    "learn-test-build-share",
+    "ai-economics-for-professionals",
+    "ai-productivity-system",
+    "how-to-use-ai",
+    "how-to-write-prompts",
+    "how-to-use-ai-skills",
+    "ai-tools-landscape",
+    "profile-picture-prompts",
+    "ai-financial-market-analysis"
+  ],
+  "courses": [
+    "practical-chatgpt-start",
+    "ai-for-engineers",
+    "automation-workshop"
+  ],
+  "projects": [
+    "engineering-doc-rag",
+    "content-automation-pipeline",
+    "shift-report-assistant"
+  ]
+}

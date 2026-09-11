@@ -3,7 +3,7 @@ import { z } from "zod";
 import { normalizePhone } from "@/lib/phone";
 import { verifyPassword } from "@/lib/password";
 import { Users, Devices, Activity } from "@/lib/db";
-import { getSession, adminPhones, isStaff, type Role } from "@/lib/session";
+import { getSession, isStaff, type Role } from "@/lib/session";
 import { rateLimit } from "@/lib/ratelimit";
 import { clientIp } from "@/lib/utils";
 
@@ -24,6 +24,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "invalid_phone" }, { status: 400 });
   }
 
+  const ipLimit = rateLimit("login-ip:" + clientIp(req), 40, 10 * 60 * 1000);
+  if (!ipLimit.ok) return NextResponse.json({ error: "too_many" }, { status: 429 });
+
   // brute-force protection: 10 tries / 10 min per IP+phone
   const rl = rateLimit(`login:${clientIp(req)}:${phone}`, 10, 10 * 60 * 1000);
   if (!rl.ok) {
@@ -32,7 +35,7 @@ export async function POST(req: Request) {
 
   const existing = Users.byPhone(phone);
   if (!existing) {
-    return NextResponse.json({ error: "user_not_found" }, { status: 404 });
+    return NextResponse.json({ error: "invalid_credentials" }, { status: 401 });
   }
   if (existing.status !== "active") {
     return NextResponse.json({ error: "disabled" }, { status: 403 });
@@ -42,15 +45,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "no_password" }, { status: 400 });
   }
   if (!(await verifyPassword(body.password, existing.passwordHash))) {
-    return NextResponse.json({ error: "wrong_password" }, { status: 401 });
+    return NextResponse.json({ error: "invalid_credentials" }, { status: 401 });
   }
 
-  let user = existing;
-  // Owner phones always keep super_admin (first-time bootstrap).
-  if (adminPhones().includes(phone) && user.role === "user") {
-    Users.update(user.id, { role: "super_admin" });
-    user = Users.byId(user.id)!;
-  }
+  const user = existing;
 
   const deviceId = Devices.create(user.id, req.headers.get("user-agent")?.slice(0, 120) || "Web");
   const session = await getSession();

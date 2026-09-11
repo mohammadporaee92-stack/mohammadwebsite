@@ -98,7 +98,7 @@ export default async function AdminArticleEdit({ params }: { params: Promise<{ l
             })}
           </div>
         </Field>
-        <Field label="Author"><input name="authorName" defaultValue={article?.authorName || "Mohammad Pouraei"} className={inputCls} /></Field>
+        <Field label="Author"><input name="authorName" defaultValue={article?.authorName || "Mohammad Poraee"} className={inputCls} /></Field>
 
         <div className="md:col-span-2 grid md:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
           <Field label="SEO title (FA)"><input name="metaTitleFa" defaultValue={article?.metaTitleFa || ""} className={inputCls} /></Field>

@@ -30,7 +30,7 @@ export default async function ContactPage({ params }: { params: Promise<{ lang: 
     { name: "Instagram", handle: `@${s.instagram}`, url: `https://instagram.com/${s.instagram}` },
     ...(s.linkedin ? [{ name: "LinkedIn", handle: "LinkedIn", url: s.linkedin }] : []),
     ...(s.youtube ? [{ name: "YouTube", handle: "YouTube", url: s.youtube }] : []),
-    ...(s.telegram ? [{ name: "Telegram", handle: "Telegram", url: s.telegram }] : []),
+    ...(s.telegram ? [{ name: "Telegram", handle: "@mohammad_por_ai", url: s.telegram }] : []),
   ];
 
   return (
@@ -47,7 +47,7 @@ export default async function ContactPage({ params }: { params: Promise<{ lang: 
             <div className="relative flex items-center gap-4">
               <ProfilePhoto lang={lang} size="sm" />
               <div>
-                <p className="font-extrabold text-lg">{lang === "fa" ? "محمد پورائی" : "Mohammad Pouraei"}</p>
+                <p className="font-extrabold text-lg">{lang === "fa" ? "محمد پورائی" : "Mohammad Poraee"}</p>
                 <p className="text-sm text-slate-300">{d.brandTagline}</p>
               </div>
             </div>

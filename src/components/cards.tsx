@@ -54,12 +54,12 @@ export function SectionHeading({ kicker, title, sub, align = "center" }: { kicke
 
 export async function ProfilePhoto({ lang, size = "lg" }: { lang: Lang; size?: "lg" | "md" | "sm" }) {
   const [img, ig] = await Promise.all([
-    getSetting("profile_image", ""),
+    getSetting("profile_image", "/images/profile.jpg"),
     getSetting("instagram", "mohammad_por_ai"),
   ]);
-  const dims = size === "lg" ? "w-44 h-44 sm:w-56 sm:h-56 text-5xl" : size === "md" ? "w-28 h-28 text-3xl" : "w-16 h-16 text-xl";
+  const dims = size === "lg" ? "w-56 h-64 sm:w-64 sm:h-72 text-5xl" : size === "md" ? "w-28 h-28 text-3xl" : "w-16 h-16 text-xl";
   if (img) {
-    return <ProfilePhotoImg src={img} alt={lang === "fa" ? "محمد پورائی" : "Mohammad Pouraei"} dims={dims} ig={ig} />;
+    return <ProfilePhotoImg src={img} alt={lang === "fa" ? "محمد پورائی" : "Mohammad Poraee"} dims={dims} ig={ig} />;
   }
   return (
     <div className={cx("relative grid place-items-center rounded-3xl bg-gradient-to-br from-navy-800 via-navy-900 to-navy-950 text-white shadow-2xl shadow-blue-900/25 ring-4 ring-white overflow-hidden", dims)}>
@@ -170,7 +170,7 @@ export function ArticleCard({ lang, article, base, bookmarked }: { lang: Lang; a
         </div>
         <p className="mt-2 text-sm text-slate-500 leading-6 line-clamp-2">{pick(article, "excerpt", lang)}</p>
         <div className="mt-auto pt-4 flex items-center gap-2 text-xs text-slate-500">
-          <span className="px-2 py-0.5 rounded-full bg-blue-50 text-tech-600 font-bold">{diff}</span>
+          {article.difficulty && <span className="px-2 py-0.5 rounded-full bg-blue-50 text-tech-600 font-bold">{diff}</span>}
           <span>{fmtNum(article.readMinutes, lang)} {d.common.minRead}</span>
           <span>•</span>
           <span>{fmtDate(article.createdAt, lang)}</span>
@@ -189,7 +189,7 @@ export type ToolCardData = {
 
 export function ToolCard({ lang, tool, bookmarked }: { lang: Lang; tool: ToolCardData; bookmarked?: boolean }) {
   const d = getDict(lang);
-  const pricingLabel = tool.pricing === "free" ? d.home.free : tool.pricing === "paid" ? d.home.paid : lang === "fa" ? "فریمیوم" : "Freemium";
+  const pricingLabel = tool.pricing === "check_provider" ? (lang === "fa" ? "قیمت در سایت ابزار" : "Check provider pricing") : tool.pricing === "free" ? d.home.free : tool.pricing === "paid" ? d.home.paid : lang === "fa" ? "فریمیوم" : "Freemium";
   return (
     <article className="group bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-5 flex flex-col">
       <div className="flex items-start justify-between gap-3">
@@ -281,7 +281,7 @@ export function Stats({ lang, items }: { lang: Lang; items: Array<{ value: numbe
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {items.map((it) => (
         <div key={it.label} className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 text-center">
-          <p className="text-3xl font-extrabold text-navy-900" dir="ltr">{fmtNum(it.value, lang)}{it.suffix || ""}<span className="text-tech-500">+</span></p>
+          <p className="text-3xl font-extrabold text-navy-900" dir="ltr">{fmtNum(it.value, lang)}{it.suffix || ""}</p>
           <p className="mt-1 text-sm text-slate-500 font-semibold">{it.label}</p>
         </div>
       ))}
@@ -320,7 +320,8 @@ export function CTAWork({ lang }: { lang: Lang }) {
 export async function InstagramSection({ lang }: { lang: Lang }) {
   const d = getDict(lang);
   const posts = await getInstagramFeed(6);
-  const username = instagramUsername();
+  const username = await getSetting("instagram", "mohammad_por_ai");
+  const telegram = await getSetting("telegram", "https://t.me/mohammad_por_ai");
   return (
     <section aria-label="Instagram">
       <SectionHeading title={d.home.igTitle} sub={d.home.igSub} />
@@ -334,16 +335,16 @@ export async function InstagramSection({ lang }: { lang: Lang }) {
           ))}
         </div>
       ) : (
-        <div className="grid sm:grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => (
-            <a key={i} href={instagramUrl()} target="_blank" rel="noopener"
-              className="group relative rounded-2xl overflow-hidden bg-gradient-to-br from-navy-800 to-navy-950 text-white p-6 min-h-44 flex flex-col justify-between hover:shadow-xl transition">
-              <div className="absolute inset-0 bg-blueprint" aria-hidden="true" />
-              <svg viewBox="0 0 24 24" className="w-8 h-8 text-white/70" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" stroke="none" /></svg>
-              <p className="relative text-sm leading-6 text-slate-300">
-                {lang === "fa" ? "آموزش‌های کوتاه روزانه را در اینستاگرام ببین" : "Watch short daily lessons on Instagram"}
-              </p>
-              <p className="relative font-extrabold text-sky-glow group-hover:text-white transition" dir="ltr">@{username}</p>
+        <div className="grid sm:grid-cols-2 gap-4">
+          {[
+            { name: "Instagram", href: "https://instagram.com/" + username, text: lang === "fa" ? "نکته‌ها و آموزش‌های کوتاه AI" : "Short AI lessons and ideas" },
+            ...(telegram ? [{ name: "Telegram", href: telegram, text: lang === "fa" ? "ادامه گفت‌وگو درباره AI و اتوماسیون" : "Continue the conversation about AI and automation" }] : []),
+          ].map((social) => (
+            <a key={social.name} href={social.href} target="_blank" rel="noopener"
+              className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-navy-800 to-navy-950 text-white p-6 hover:shadow-xl transition">
+              <p className="text-sm font-bold text-sky-glow">{social.name}</p>
+              <p className="mt-3 font-extrabold text-lg">{social.text}</p>
+              <p className="mt-4 text-sm text-slate-300" dir="ltr">@{username}</p>
             </a>
           ))}
         </div>

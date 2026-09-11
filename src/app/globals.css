@@ -131,3 +131,11 @@ body {
   background: #2563eb;
   color: #fff;
 }
+
+/* Keyboard, motion and small-screen refinements retain the existing theme. */
+:focus-visible { outline: 3px solid #3b82f6; outline-offset: 4px; }
+.rich-text { overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

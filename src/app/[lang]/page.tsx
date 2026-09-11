@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLang, type Lang, pick, fmtDate } from "@/lib/i18n";
 import { getDict } from "@/lib/dict";
-import { Cats, Courses, Articles, Tools, Projects, Journey, Users, Bookmarks } from "@/lib/db";
+import { Cats, Courses, Articles, Tools, Projects, Journey, Bookmarks } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
 import { getSettings } from "@/lib/settings";
 import { absoluteUrl } from "@/lib/utils";
@@ -22,7 +22,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
   const user = await getCurrentUser();
   const settings = await getSettings(["instagram", "site_name_fa", "site_name_en"]);
 
-  const cats = Cats.withArticleCounts("tutorial").slice(0, 8);
+  const cats = Cats.withArticleCounts("tutorial").filter((c) => c.count > 0).slice(0, 8);
   const courses = Courses.list({ status: "published", limit: 3 });
   const latestTutorials = Articles.list({ kind: "tutorial", status: "published", limit: 3 });
   const latestArticles = Articles.list({ kind: "article", status: "published", limit: 3 });
@@ -30,7 +30,6 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
   const projects = Projects.list({ status: "published", limit: 3 });
   const journey = Journey.published(3);
   const counts = {
-    users: Users.count(),
     articles: Articles.count({ status: "published" }),
     courses: Courses.count({ status: "published" }),
     tools: Tools.count({ status: "published" }),
@@ -40,7 +39,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
   const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: "Mohammad Pouraei",
+    name: "Mohammad Poraee",
     alternateName: "محمد پورائی",
     jobTitle: lang === "fa" ? "مهندس برق و مدرس هوش مصنوعی" : "Electrical Engineer & AI Educator",
     alumniOf: { "@type": "CollegeOrUniversity", name: "K. N. Toosi University of Technology" },
@@ -64,7 +63,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
               {d.hero.badge}
             </p>
             <p className="mt-5 text-lg font-bold text-sky-glow">
-              {lang === "fa" ? "محمد پورائی" : "Mohammad Pouraei"}
+              {lang === "fa" ? "محمد پورائی" : "Mohammad Poraee"}
             </p>
             <h1 className="mt-2 text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.25]">
               {d.hero.titleA}{" "}
@@ -77,7 +76,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
               <Link href={`/${lang}/learn`} className="px-7 py-3.5 rounded-xl bg-white text-navy-900 font-extrabold hover:bg-blue-50 transition shadow-xl">
                 {d.hero.ctaStart}
               </Link>
-              <Link href={`/${lang}/courses`} className="px-7 py-3.5 rounded-xl border border-white/30 font-bold hover:bg-white/10 transition">
+              <Link href={`/${lang}/learn#tutorials`} className="px-7 py-3.5 rounded-xl border border-white/30 font-bold hover:bg-white/10 transition">
                 {d.hero.ctaExplore}
               </Link>
               <Link href={`/${lang}/work`} className="px-7 py-3.5 rounded-xl bg-gradient-to-r from-tech-500 to-blue-600 font-extrabold hover:brightness-110 transition shadow-lg shadow-blue-900/50">
@@ -93,7 +92,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
             <div className="relative">
               <ProfilePhoto lang={lang} size="lg" />
               <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap bg-navy-900/90 backdrop-blur border border-white/15 rounded-2xl px-4 py-2.5 text-xs font-bold text-sky-200 animate-float">
-                {lang === "fa" ? "🤖 متخصص کاربردی هوش مصنوعی" : "🤖 Applied AI Specialist"}
+                {lang === "fa" ? "آموزش AI و اتوماسیون" : "Practical AI & Automation"}
               </div>
             </div>
           </div>
@@ -103,7 +102,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <div className="mx-auto max-w-7xl px-4 sm:px-6 space-y-20 py-14">
         {/* ============ STATS ============ */}
         <Stats lang={lang} items={[
-          { value: Math.max(counts.users, 120), label: d.home.statsLearners },
+          { value: 2, label: lang === "fa" ? "زبان آموزش" : "Learning languages" },
           { value: counts.articles, label: d.home.statsTutorials },
           { value: counts.courses, label: d.home.statsCourses },
           { value: counts.tools, label: d.home.statsTools },
@@ -160,6 +159,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
         {/* ============ PROJECTS ============ */}
         <section aria-label={d.home.projectsTitle}>
           <SectionHeading title={d.home.projectsTitle} sub={d.home.projectsSub} />
+          {projects.length === 0 && <p className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-slate-500">{lang === "fa" ? "پروژه‌ها پس از تکمیل در این بخش معرفی می‌شوند." : "Completed projects will be shared here."}</p>}
           <div className="grid md:grid-cols-3 gap-5">
             {projects.map((p) => (
               <ProjectCard key={p.slug} lang={lang} project={p} />

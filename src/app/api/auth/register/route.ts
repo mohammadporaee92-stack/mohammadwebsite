@@ -1,3 +1,5 @@
+import { rateLimit } from "@/lib/ratelimit";
+import { clientIp } from "@/lib/utils";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { normalizePhone } from "@/lib/phone";
@@ -13,6 +15,8 @@ const Body = z.object({
 });
 
 export async function POST(req: Request) {
+  const rl = rateLimit("register:" + clientIp(req), 5, 10 * 60 * 1000);
+  if (!rl.ok) return NextResponse.json({ error: "too_many" }, { status: 429 });
   let body: z.infer<typeof Body>;
   try {
     body = Body.parse(await req.json());
@@ -34,7 +38,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "user_exists" }, { status: 409 });
   }
 
-  const role: Role = adminPhones().includes(phone) ? "super_admin" : "user";
+  if (adminPhones().includes(phone)) return NextResponse.json({ error: "registration_unavailable" }, { status: 403 });
+  const role: Role = "user";
   const user = Users.create({
     phone,
     name,
