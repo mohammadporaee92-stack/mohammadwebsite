@@ -39,7 +39,7 @@ export default async function ToolPage({ params }: { params: Promise<{ lang: str
     await recordHistory({ userId: user.id, targetType: "tool", targetId: tool.id, title: tool.name, url: `/${lang}/tools/${slug}` });
   }
 
-  const pricingLabel = tool.pricing === "free" ? d.home.free : tool.pricing === "paid" ? d.home.paid : lang === "fa" ? "فریمیوم" : "Freemium";
+  const pricingLabel = tool.pricing === "check_provider" ? (lang === "fa" ? "قیمت در سایت ابزار" : "Check provider pricing") : tool.pricing === "free" ? d.home.free : tool.pricing === "paid" ? d.home.paid : lang === "fa" ? "فریمیوم" : "Freemium";
 
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 py-12">

@@ -1,6 +1,7 @@
 import { getIronSession, type IronSession } from "iron-session";
 import { cookies } from "next/headers";
-import { Users } from "./db";
+import { Users, one } from "./db";
+import { normalizePhone } from "./phone";
 
 export type Role = "super_admin" | "admin" | "editor" | "instructor" | "user";
 
@@ -20,18 +21,13 @@ export function sessionOptions() {
     );
   }
   const isProd = process.env.NODE_ENV === "production";
-  // SameSite=None (+Secure) in production so the session survives inside the
-  // proxied preview iframe (cross-site context). On the real first-party
-  // domain this also works fine. Override with SESSION_SAMESITE=lax|strict
-  // if you want tighter CSRF defaults and never embed the site in iframes.
-  const sameSite = (process.env.SESSION_SAMESITE as "lax" | "strict" | "none" | undefined)
-    || (isProd ? "none" : "lax");
+  const sameSite = "lax" as const;
   return {
     password,
     cookieName: "porai_session",
     ttl: SESSION_TTL,
     cookieOptions: {
-      secure: isProd ? true : sameSite === "none" ? true : false,
+      secure: isProd,
       httpOnly: true,
       sameSite,
       path: "/",
@@ -41,7 +37,20 @@ export function sessionOptions() {
 
 export async function getSession(): Promise<IronSession<SessionData>> {
   const cookieStore = await cookies();
-  return getIronSession<SessionData>(cookieStore, sessionOptions());
+  const session = await getIronSession<SessionData>(cookieStore, sessionOptions());
+  if (session.userId) {
+    const user = Users.byId(session.userId);
+    const device = session.deviceId ? one("SELECT id FROM device_sessions WHERE id = ? AND userId = ?", session.deviceId, session.userId) : null;
+    if (!user || user.status !== "active" || !device) {
+      // Do not write cookies while rendering a Server Component.
+      delete session.userId;
+      delete session.role;
+      delete session.deviceId;
+    } else {
+      session.role = user.role as Role;
+    }
+  }
+  return session;
 }
 
 export async function getCurrentUser() {
@@ -73,6 +82,6 @@ export function canManageSettings(role?: string | null) {
 export function adminPhones(): string[] {
   return (process.env.ADMIN_PHONES || "")
     .split(",")
-    .map((p) => p.trim())
-    .filter(Boolean);
+    .map(normalizePhone)
+    .filter((phone): phone is string => phone !== null);
 }

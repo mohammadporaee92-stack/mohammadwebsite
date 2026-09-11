@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS articles (
   contentFa TEXT NOT NULL DEFAULT '', contentEn TEXT NOT NULL DEFAULT '',
   difficulty TEXT, readMinutes INTEGER NOT NULL DEFAULT 5,
   metaTitleFa TEXT, metaTitleEn TEXT, metaDescFa TEXT, metaDescEn TEXT,
-  views INTEGER NOT NULL DEFAULT 0, authorName TEXT NOT NULL DEFAULT 'Mohammad Pouraei',
+  views INTEGER NOT NULL DEFAULT 0, authorName TEXT NOT NULL DEFAULT 'Mohammad Poraee',
   createdAt TEXT NOT NULL, updatedAt TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_articles_kind ON articles(kind, status);
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS courses (
   priceIrt INTEGER, priceUsd INTEGER, level TEXT NOT NULL DEFAULT 'beginner',
   lang TEXT NOT NULL DEFAULT 'both', status TEXT NOT NULL DEFAULT 'draft',
   featured INTEGER NOT NULL DEFAULT 0, categoryId TEXT,
-  instructor TEXT NOT NULL DEFAULT 'Mohammad Pouraei',
+  instructor TEXT NOT NULL DEFAULT 'Mohammad Poraee',
   createdAt TEXT NOT NULL, updatedAt TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_courses_status ON courses(status);
@@ -529,7 +529,7 @@ export const Articles = {
       id, slug, d.kind || "article", d.status || "draft", d.publishAt || null, d.coverUrl || null, d.categoryId || null,
       d.titleFa, d.titleEn, d.excerptFa || null, d.excerptEn || null, d.contentFa || "", d.contentEn || "",
       d.difficulty || null, d.readMinutes ?? 5, d.metaTitleFa || null, d.metaTitleEn || null, d.metaDescFa || null, d.metaDescEn || null,
-      d.views ?? 0, d.authorName || "Mohammad Pouraei", now, now);
+      d.views ?? 0, d.authorName || "Mohammad Poraee", now, now);
     return Articles.byId(id)!;
   },
   update(id: string, d: Partial<Article>) {
@@ -582,7 +582,7 @@ export const Courses = {
       id, slug, d.titleFa, d.titleEn, d.descFa || "", d.descEn || "", d.outcomesFa || "", d.outcomesEn || "",
       d.audienceFa || "", d.audienceEn || "", d.prereqFa || "", d.prereqEn || "", d.coverUrl || null, d.promoVideoUrl || null,
       d.priceType || "free", d.priceIrt ?? null, d.priceUsd ?? null, d.level || "beginner", d.lang || "both",
-      d.status || "draft", d.featured ? 1 : 0, d.categoryId || null, d.instructor || "Mohammad Pouraei", now, now);
+      d.status || "draft", d.featured ? 1 : 0, d.categoryId || null, d.instructor || "Mohammad Poraee", now, now);
     return Courses.byId(id)!;
   },
   update(id: string, d: Partial<Course> & { featured?: boolean }) {

@@ -40,7 +40,7 @@ export default async function AdminTools({ params, searchParams }: {
           <div className="grid grid-cols-3 gap-2">
             <div><label className="block text-xs font-extrabold mb-1">Pricing</label>
               <select name="pricing" defaultValue={"pricing" in editing ? (editing.pricing as string) : "freemium"} className={inputCls}>
-                <option value="free">free</option><option value="freemium">freemium</option><option value="paid">paid</option>
+                <option value="check_provider">{lang === "fa" ? "قیمت در سایت ابزار" : "Check provider pricing"}</option><option value="free">free</option><option value="freemium">freemium</option><option value="paid">paid</option>
               </select></div>
             <div><label className="block text-xs font-extrabold mb-1">Status</label>
               <select name="status" defaultValue={"status" in editing ? (editing.status as string) : "published"} className={inputCls}>

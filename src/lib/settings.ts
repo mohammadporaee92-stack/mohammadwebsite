@@ -1,4 +1,5 @@
 import { Settings } from "./db";
+import { BRAND_DEFAULTS } from "./brand";
 
 const cache = new Map<string, string>();
 let cacheAt = 0;
@@ -11,15 +12,14 @@ export async function getSetting(key: string, fallback = ""): Promise<string> {
     cacheAt = now;
   }
   if (cache.has(key)) return cache.get(key)!;
-  const value = Settings.get(key) ?? fallback;
+  const value = Settings.get(key) ?? BRAND_DEFAULTS[key] ?? fallback;
   cache.set(key, value);
   return value;
 }
 
 export async function getSettings(keys: string[]): Promise<Record<string, string>> {
-  const stored = Settings.many(keys);
   const out: Record<string, string> = {};
-  for (const k of keys) out[k] = stored[k] ?? "";
+  for (const k of keys) out[k] = Settings.get(k) ?? BRAND_DEFAULTS[k] ?? "";
   return out;
 }
 

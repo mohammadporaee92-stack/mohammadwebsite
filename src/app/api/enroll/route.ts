@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Courses, Enroll, Notifs } from "@/lib/db";
 import { getSession } from "@/lib/session";
-import { paymentsEnabled } from "@/lib/payments";
 
 const Body = z.object({ courseSlug: z.string().min(2) });
 
@@ -17,8 +16,8 @@ export async function POST(req: Request) {
     if (!course || course.status !== "published") {
       return NextResponse.json({ error: "not_found" }, { status: 404 });
     }
-    if (course.priceType === "paid" && !paymentsEnabled()) {
-      // Payment gateway not connected yet — owner must configure it.
+    if (course.priceType === "paid") {
+      // Only a future verified checkout may grant access to paid courses.
       return NextResponse.json({ error: "paid_disabled" }, { status: 402 });
     }
     Enroll.create(session.userId, course.id);

@@ -34,7 +34,7 @@ export default async function ProjectsIndex({ params }: { params: Promise<{ lang
           ))}
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center text-slate-500">{d.search.noResults}</div>
+        <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center text-slate-500">{lang === "fa" ? "پروژه‌ها پس از تکمیل در این بخش معرفی می‌شوند." : "Completed projects will be shared here."}</div>
       )}
     </div>
   );

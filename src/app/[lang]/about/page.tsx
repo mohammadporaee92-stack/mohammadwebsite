@@ -26,15 +26,15 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
   const s = await getSettings(["bio_fa", "bio_en", "instagram", "linkedin", "contact_email"]);
 
   const timeline = lang === "fa" ? [
-    { year: "🎓", title: "کارشناسی ارشد مهندسی برق — دانشگاه خواجه نصیرالدین طوسی", text: "پایه مهندسی من: سیستم‌های قدرت، کنترل و تفکر سیستمی." },
+    { year: "🎓", title: "کارشناسی ارشد مهندسی برق — دانشگاه خواجه نصیرالدین طوسی", text: "پایه مهندسی من: مهندسی کنترل و تفکر سیستمی." },
     { year: "⚙️", title: "مهندس در صنعت نفت و گاز", text: "کار واقعی در صنعت: پروژه، مدارک فنی، استانداردها و مسئولیت." },
     { year: "🤖", title: "ورود جدی به هوش مصنوعی", text: "یادگیری عمیق AI به‌عنوان ابزار کار، نه فقط یک علاقه." },
-    { year: "🚀", title: "PorAI: آموزش و ساختن علنی", text: "امروز: آموزش AI کاربردی، اتوماسیون و مشاوره برای مهندسان و کسب‌وکارها." },
+    { year: "🚀", title: "PorAI: آموزش و ساختن علنی", text: "آموزش ساده AI و اتوماسیون برای کسانی که می‌خواهند از صفر شروع کنند." },
   ] : [
-    { year: "🎓", title: "MSc in Electrical Engineering — K. N. Toosi University", text: "My engineering foundation: power systems, control and systems thinking." },
+    { year: "🎓", title: "MSc in Electrical Engineering — K. N. Toosi University", text: "My engineering foundation: control engineering and systems thinking." },
     { year: "⚙️", title: "Engineer in the Oil & Gas industry", text: "Real industry work: projects, technical docs, standards and responsibility." },
     { year: "🤖", title: "Going deep into AI", text: "Learning AI seriously as a work tool, not just a hobby." },
-    { year: "🚀", title: "PorAI: teaching & building in public", text: "Today: practical AI education, automation and consulting for engineers and businesses." },
+    { year: "🚀", title: "PorAI: teaching & building in public", text: "Clear AI and automation lessons for people starting from zero." },
   ];
 
   return (
@@ -42,7 +42,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
       <JsonLd data={{
         "@context": "https://schema.org",
         "@type": "Person",
-        name: "Mohammad Pouraei",
+        name: "Mohammad Poraee",
         alternateName: "محمد پورائی",
         url: absoluteUrl(`/${lang}/about`),
         jobTitle: "Electrical Engineer & AI Educator",
@@ -59,7 +59,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
           <div>
             <p className="text-sm font-extrabold text-tech-600 tracking-wide">PorAI · {d.brandTagline}</p>
             <h1 className="mt-2 text-3xl sm:text-4xl font-extrabold text-navy-900">
-              {lang === "fa" ? "محمد پورائی" : "Mohammad Pouraei"}
+              {lang === "fa" ? "محمد پورائی" : "Mohammad Poraee"}
             </h1>
             <p className="mt-4 text-slate-600 leading-8 whitespace-pre-line">{lang === "fa" ? s.bio_fa : s.bio_en}</p>
             <p className="mt-4 inline-flex text-sm font-extrabold text-navy-900 bg-blue-50 border border-blue-100 rounded-full px-4 py-2">
@@ -104,11 +104,11 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
         {/* what I believe */}
         <section className="grid md:grid-cols-3 gap-4" aria-label="principles">
           {(lang === "fa" ? [
-            { t: "عمل‌گرایی، نه هایپ", x: "فقط چیزی را آموزش می‌دهم که خودم تست کرده و در کار واقعی جواب داده باشم." },
+            { t: "عمل‌گرایی، نه هایپ", x: "با مثال‌های روشن و تمرین‌های کوچک، یادگیری را به انجام یک کار قابل بررسی وصل می‌کنیم." },
             { t: "صادقانه درباره محدودیت‌ها", x: "AI ابزار قدرتمندی است اما همه‌چیز نیست؛ محدودیت‌هایش را هم می‌گویم." },
             { t: "مهندسی × AI", x: "ترکیب دانش عمیق مهندسی با ابزارهای AI، جایی است که ارزش واقعی ساخته می‌شود." },
           ] : [
-            { t: "Practice, not hype", x: "I only teach what I've personally tested on real work." },
+            { t: "Practice, not hype", x: "Clear examples and small exercises turn learning into work you can review." },
             { t: "Honest about limits", x: "AI is powerful but not everything; I teach its limits too." },
             { t: "Engineering × AI", x: "Deep engineering knowledge combined with AI tools is where real value is created." },
           ]).map((p) => (

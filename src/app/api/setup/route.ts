@@ -3,25 +3,21 @@ import { timingSafeEqual } from "crypto";
 import { one } from "@/lib/db";
 import { runAllSeeds } from "@/lib/seeds";
 
-// One-time production setup: fills an empty database with the starter content.
-// Usage (once, right after first deploy):
-//   https://YOUR-DOMAIN/api/setup?secret=SETUP_SECRET
-// Disabled when SETUP_SECRET env is not set. Refuses to run when content exists
-// (unless &force=1) so it can never wipe a live site by accident.
-export async function GET(req: NextRequest) {
+// Optional first setup for an empty database. Never put the secret in a URL.
+export async function POST(req: NextRequest) {
   const configured = process.env.SETUP_SECRET || "";
   if (!configured) return NextResponse.json({ ok: false }, { status: 404 });
-  const given = req.nextUrl.searchParams.get("secret") || "";
+  const given = req.headers.get("authorization")?.replace(/^Bearer /, "") || "";
   const a = Buffer.from(given);
   const b = Buffer.from(configured);
   if (a.length !== b.length || !timingSafeEqual(a, b)) {
     return NextResponse.json({ ok: false }, { status: 403 });
   }
   const existing = (one<{ n: number }>("SELECT COUNT(*) n FROM articles")?.n ?? 0) as number;
-  if (existing > 0 && req.nextUrl.searchParams.get("force") !== "1") {
+  if (existing > 0) {
     return NextResponse.json({ ok: false, error: "already_seeded", articles: existing });
   }
-  // The seed upserts in place, so it is safe to re-run (content is refreshed, users kept).
+  // Existing installations use the local brand:refresh command; no remote force reset.
   await runAllSeeds();
   const counts = {
     articles: (one<{ n: number }>("SELECT COUNT(*) n FROM articles")?.n ?? 0) as number,

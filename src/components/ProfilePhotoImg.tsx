@@ -22,5 +22,5 @@ export default function ProfilePhotoImg({ src, alt, dims, ig }: {
     );
   }
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt={alt} onError={() => setFailed(true)} className={cx("object-cover rounded-3xl shadow-2xl shadow-blue-900/25 ring-4 ring-white", dims)} loading="lazy" />;
+  return <img src={src} alt={alt} onError={() => setFailed(true)} className={cx("object-cover object-top rounded-3xl shadow-2xl shadow-blue-900/25 ring-4 ring-white", dims)} width={1008} height={1052} />;
 }
